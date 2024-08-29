@@ -20,7 +20,7 @@ export default function Home() {
           </p>
           <br></br>
           <button className="p-5 pl-5 pr-5 bg-white text-black font-extrabold rounded-lg">
-            <Link href="/housing">Take me to my next adventure!</Link>
+            <Link href="/login">Take me to my next adventure!</Link>
           </button>
         </div>
       </div>
