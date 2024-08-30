@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import mainLogo from "../images/mainLogo.png";
 
 type LoginForm = {
     username: string,
@@ -23,8 +24,12 @@ const Login = () => {
 
   return (
     <>
-      <span className="min-h-screen flex text-center justify-center items-center">
-        <h1 className="text-4xl font-bold">IncludiTrip</h1>
+      <span className="min-h-screen flex text-center justify-center items-center bg-[#23465d]">
+        <img
+          src={mainLogo.src}
+          alt="IncludiTrip, Take it Easy logo"
+          className="w-1/2 h-auto"
+          />
       </span>
       <span className="min-h-screen flex text-center justify-center items-center bg-white text-black">
         <form className="p-10 flex flex-col items-left text-left rounded-lg space-y-4">
@@ -46,7 +51,7 @@ const Login = () => {
           />
           <span className="flex flex-col gap-3 items-center">
             <button
-              className="w-full p-3 rounded-lg mt-5 bg-black text-white font-bold"
+              className="w-full p-3 rounded-lg mt-5 bg-[#23465d] text-white font-bold"
               type="submit"
             >
               Sign In
