@@ -9,6 +9,7 @@ import {
   onAuthStateChanged,
   User,
 } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 type LoginForm = {
   username: string;
@@ -19,6 +20,7 @@ const Login = () => {
   // SET UP REST OF STATE VARIABLES AND FIREBASE HOOKS HERE.
   // .....
   // .....
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [form, setForm] = useState<LoginForm>({
     username: "",
@@ -48,6 +50,7 @@ const Login = () => {
       setUser(userCredential.user);
       setShowPopup(false);
       console.log("User signed in successfully: ", userCredential.user);
+      router.push("/dashboard");
     } catch (e) {
       setShowPopup(true);
       console.error("Error signing in: ", e);
@@ -61,6 +64,7 @@ const Login = () => {
       setUser(result.user);
       setShowPopup(false);
       console.log("User signed in successfully: ", result.user);
+      router.push("/dashboard");
     } catch (e) {
       setShowPopup(true);
       console.error("Error signing in: ", e);
@@ -69,7 +73,7 @@ const Login = () => {
 
   return (
     <>
-      <span className="min-h-screen flex text-center justify-center items-center">
+      <span className="min-h-[10vh] flex text-center justify-center items-center">
         <h1 className="text-4xl font-bold">IncludiTrip</h1>
       </span>
       <span className="min-h-screen flex text-center justify-center items-center bg-white text-black">
