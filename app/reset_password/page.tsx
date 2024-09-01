@@ -60,7 +60,7 @@ const PasswordReset = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <button
-            className="bg-[#23465d] rounded-lg p-5 w-full text-white"
+            className="bg-[#23465d] rounded-lg p-5 w-full text-white font-bold"
             type="submit"
           >
             Send Password Reset Link
@@ -77,7 +77,7 @@ const PasswordReset = () => {
           </p>
           <br></br>
           <button>
-            <Link href="/login" className="p-5 text-black bg-white rounded-lg">Sign In</Link>
+            <Link href="/login" className="p-5 text-black font-bold bg-white rounded-lg">Sign In</Link>
           </button>
         </span>
       )}

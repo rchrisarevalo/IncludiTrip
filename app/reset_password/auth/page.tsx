@@ -109,11 +109,11 @@ const ChangePassword = () => {
             :
             <span className="flex flex-col items-center text-center gap-5">
               <h3 className="text-lg ml-16 mr-16">Password successfully reset! You can now log back in.</h3>
+              <br></br>
               <button
-                className="bg-white rounded-lg p-5 w-[75%] text-black"
                 type="submit"
               >
-                <Link href="/login" className="p-3.5 pl-10 pr-10">Sign In</Link>
+                <Link href="/login" className="bg-white font-bold rounded-lg p-5 w-[75%] text-black">Sign In</Link>
               </button>
             </span>
         )
