@@ -9,7 +9,7 @@ interface PasswordResetLayoutProps {
 const PasswordResetLayout: React.FC<PasswordResetLayoutProps> = ({ children }) => {
     return (
         <PublicRoute>
-            <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen">
+            <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen bg-[#23465d]">
                 { children }
             </div>
         </PublicRoute>

@@ -3,6 +3,7 @@ import { auth } from "@/firebase";
 import Link from "next/link";
 import { useState } from "react";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
+import logo from "../images/smallLogo.png";
 
 const PasswordReset = () => {
   const [email, setEmail] = useState<string>("");
@@ -27,6 +28,23 @@ const PasswordReset = () => {
 
   return (
     <>
+      <nav className="fixed top-0 w-full text-[#23465d] bg-white py-4 px-8">
+        <div className="flex items-center justify-between max-w-screen-xl mx-auto">
+          <Link href="/" >
+          <img
+            src={logo.src}
+            alt="IncludiTrip logo"
+            className="object-cover rounded-lg"
+            height={100}
+            width={100}
+          />
+          </Link>
+          <ul className="flex space-x-6 font-bold text-l">
+            <li><Link href="/" className="hover:text-gray-300">Home</Link></li>
+            <li><Link href="/login" className="hover:text-gray-300">Login</Link></li>
+          </ul>
+        </div>
+      </nav>
       {!passwordReqSent ? (
         <form
           onSubmit={handleSubmission}
@@ -42,7 +60,7 @@ const PasswordReset = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <button
-            className="bg-black rounded-lg p-5 w-full text-white"
+            className="bg-[#23465d] rounded-lg p-5 w-full text-white"
             type="submit"
           >
             Send Password Reset Link
@@ -57,8 +75,9 @@ const PasswordReset = () => {
             An email has been sent out with instructions on how to reset your
             password.
           </p>
-          <button className="bg-white rounded-lg p-5 text-black">
-            <Link href="/login">Sign In</Link>
+          <br></br>
+          <button>
+            <Link href="/login" className="p-5 text-black bg-white rounded-lg">Sign In</Link>
           </button>
         </span>
       )}

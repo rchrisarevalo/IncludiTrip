@@ -44,6 +44,8 @@ const ChangePassword = () => {
         // Update user's password.
         await confirmPasswordReset(auth, param.get("oobCode") as string, authPassword.confirm_password)
         setPasswordReset(true)
+      } else {
+        throw new Error("Passwords are not the same")
       }
     } catch (error) {
       setPasswordResetError(true)
@@ -97,7 +99,7 @@ const ChangePassword = () => {
                 }
               />
               <button
-                className="bg-black rounded-lg p-5 w-full text-white"
+                className="bg-[#23465d] rounded-lg p-5 w-full text-white"
                 type="submit"
               >
                 Update Password
