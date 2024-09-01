@@ -115,7 +115,7 @@ const Login = () => {
               <Link href="/signup">Create an account</Link>
             </button>
             <button className="text-sm mt-1 font-bold" type="button">
-              Forgot password? Click here!
+              <Link href="/reset_password">Forgot password? Click here!</Link>
             </button>
           </span>
         </form>

@@ -1,19 +1,19 @@
 import React from "react";
 import '@fontsource/poppins';
-import { ProtectedRoute } from "../components/UserSession";
+import { PublicRoute } from "../components/UserSession";
 
-interface HousingPageLayoutProps {
+interface PasswordResetLayoutProps {
     children: React.ReactNode;
 }
 
-const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
+const PasswordResetLayout: React.FC<PasswordResetLayoutProps> = ({ children }) => {
     return (
-        <ProtectedRoute>
+        <PublicRoute>
             <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen">
                 { children }
             </div>
-        </ProtectedRoute>
+        </PublicRoute>
     )
 }
 
-export default HousingLayout;
+export default PasswordResetLayout;

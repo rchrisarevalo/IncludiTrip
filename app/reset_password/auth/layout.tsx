@@ -1,19 +1,19 @@
 import React from "react";
 import '@fontsource/poppins';
-import { ProtectedRoute } from "../components/UserSession";
+import { PublicRoute } from "@/app/components/UserSession";
 
-interface HousingPageLayoutProps {
+interface AuthLayoutProps {
     children: React.ReactNode;
 }
 
-const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
+const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
     return (
-        <ProtectedRoute>
+        <PublicRoute>
             <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen">
                 { children }
             </div>
-        </ProtectedRoute>
+        </PublicRoute>
     )
 }
 
-export default HousingLayout;
+export default AuthLayout;

@@ -32,7 +32,7 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
           <p>Error!</p>
         )
       ) : (
-        <p>Loading...</p>
+        <h1 className="text-3xl min-h-screen flex flex-row items-center justify-center font-bold">Loading...</h1>
       )}
     </>
   );
@@ -55,7 +55,7 @@ const PublicRoute: React.FC<UserSessionProps> = ({ children }) => {
           <p>Error!</p>
         )
       ) : (
-        <p>Loading...</p>
+        <h1 className="text-3xl min-h-screen flex flex-row items-center justify-center font-bold">Loading...</h1>
       )}
     </>
   );
