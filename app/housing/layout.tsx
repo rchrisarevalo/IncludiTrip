@@ -1,5 +1,6 @@
 import React from "react";
 import '@fontsource/poppins';
+import { ProtectedRoute } from "../components/UserSession";
 
 interface HousingPageLayoutProps {
     children: React.ReactNode;
@@ -7,9 +8,11 @@ interface HousingPageLayoutProps {
 
 const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
     return (
-        <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen">
-            { children }
-        </div>
+        <ProtectedRoute>
+            <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen">
+                { children }
+            </div>
+        </ProtectedRoute>
     )
 }
 
