@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { calculateAge } from "../functions/CalculateAge";
+import mainLogo from "../images/mainLogo.png";
 import { auth, db } from "@/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import {
@@ -94,14 +95,15 @@ const Signup = () => {
 
   return (
     <>
-      <span className="flex items-center justify-center min-h-screen max-sm:min-h-10">
-        <h1 className="text-4xl font-bold">IncludiTrip</h1>
+      <span className="flex items-center justify-center min-h-screen max-sm:min-h-10 bg-[#23465d]">
+      <img
+          src={mainLogo.src}
+          alt="IncludiTrip, Take it Easy logo"
+          className="w-1/2 h-auto"
+          />
       </span>
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
-        <form
-          onSubmit={handleSubmit}
-          className="p-10 mt-10 mb-10 overflow-y-scroll w-screen"
-        >
+        <form onSubmit={handleSubmit} className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]">
           <span className="max-sm:p-4 flex flex-col items-left text-left rounded-lg space-y-4">
             <span className="grid grid-cols-2 max-sm:grid-cols-1 items-center gap-5">
               <span className="flex flex-col items-left text-left space-y-5">

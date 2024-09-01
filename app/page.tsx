@@ -1,29 +1,67 @@
 import "@fontsource/poppins";
 import Link from "next/link";
+import image from "./images/home.png";
+import logo from "./images/smallLogo.png";
 
 export default function Home() {
   return (
-    <main className="flex font-['Poppins'] min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="mt-10 mb-10 ml-10 mr-10 text-center text-lg space-y-5">
-          <h1 className="text-5xl">Struggling to plan your next vacation?</h1>
-          <p>
-            Look no further! The AI Travel App takes the stress out of travel
-            planning.
-          </p>
-          <br></br>
-          <h1 className="text-5xl">What does the AI Travel App do?</h1>
-          <p>
-            Get personalized travel recommendations tailored to your budget and
-            preferences. Start your adventure today with the AI Travel App by
-            having it find the best hotels for you!
-          </p>
-          <br></br>
-          <button className="p-5 pl-5 pr-5 bg-white text-black font-extrabold rounded-lg">
-            <Link href="/login">Take me to my next adventure!</Link>
-          </button>
+    <main className="flex font-['Poppins'] min-h-screen flex-col items-center justify-between bg-[#f5f5f5]">
+      <nav className="w-full text-[#23465d] bg-white py-4 px-8">
+        <div className="flex items-center justify-between max-w-screen-xl mx-auto">
+          <Link href="/" >
+          <img
+            src={logo.src}
+            alt="IncludiTrip logo"
+            className="object-cover rounded-lg"
+            height={100}
+            width={100}
+          />
+          </Link>
+          <ul className="flex space-x-6 font-bold text-l">
+            <li><Link href="/" className="hover:text-gray-300">Home</Link></li>
+            <li><Link href="/login" className="hover:text-gray-300">Login</Link></li>
+          </ul>
         </div>
-      </div>
+      </nav>
+      <section className="flex flex-col p-8 md:p-24 md:flex-row items-center justify-center h-screen w-full bg-[#23465d] text-white">
+      <div className="flex flex-1 flex-col justify-center items-start text-center md:text-left md:max-w-lg px-4 md:px-8 space-y-6">
+          <h1 className="text-3xl md:text-5xl font-bold">
+            Struggling to plan your next vacation?
+          </h1>
+          <p className="text-lg md:text-xl">
+            Look no further! IncludiTrip takes the stress out of travel planning.
+          </p>
+          </div>
+
+          <div className="flex-1 flex justify-center items-center w-full h-64 md:h-auto mt-8 md:mt-0">
+          <div className="relative w-full max-w-xs md:max-w-lg">
+          <img
+            src={image.src}
+            alt="Travel the world image with person in wheelchair and a plane"
+            className="object-cover rounded-lg"
+            height={400}
+            width={600}
+          />
+          </div>
+        </div>
+      </section>
+
+      <section className="flex flex-col items-center justify-center w-full text-center px-4 py-8 mt-24">
+        <article className="max-w-2xl space-y-14">
+          <h1 className="text-3xl md:text-5xl font-bold">
+            What does IncludiTrip do?
+          </h1>
+          <p className="text-lg md:text-xl">
+            Get personalized travel recommendations tailored to your budget and preferences.
+            Start your adventure today with the AI Travel App by having it find the best hotels for you!
+          </p>
+          <Link 
+            href="/login" 
+            className="inline-block bg-[#23465d] text-white font-extrabold px-8 py-5 border-slate-400 border-4 rounded-lg hover:bg-slate-300 hover:text-black hover:border-[#23465d] transition duration-300">
+              Take me to my next adventure!
+          </Link>
+        </article>
+      </section>
     </main>
   );
 }
