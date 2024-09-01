@@ -1,8 +1,11 @@
 "use client";
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  useAuthState,
+  useSendEmailVerification,
+} from "react-firebase-hooks/auth";
 import { auth } from "@/firebase";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import "@fontsource/poppins";
 
 interface UserSessionProps {
@@ -19,12 +22,18 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
   const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
 
+  console.log(user?.emailVerified)
+
   return (
     <>
       {!loading ? (
         !error ? (
           user ? (
-            children
+            user.emailVerified ? (
+              children
+            ) : (
+              <h1>Verify your email first.</h1>
+            )
           ) : (
             router.push("/login")
           )
