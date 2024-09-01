@@ -83,7 +83,7 @@ const Signup = () => {
     // organized list.
     setForm({
       ...form,
-      disabilities_list: input != "" ? input.split(/[\s,]+/) : [],
+      disabilities_list: input != "" ? input.split(",") : [],
     });
   };
 
