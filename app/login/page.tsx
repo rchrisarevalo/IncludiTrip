@@ -120,14 +120,14 @@ const Login = () => {
               <Link href="/signup">Create an account</Link>
             </button>
             <button className="text-sm mt-1 font-bold" type="button">
-              Forgot password? Click here!
+              <Link href="/reset_password">Forgot password? Click here!</Link>
             </button>
           </span>
         </form>
       </span>
       {showPopup && (
         <span className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white text-black p-5 rounded-lg">
+          <div className="bg-white text-black p-10 rounded-lg">
             <h1 className="text-2xl font-bold">Error signing in</h1>
             <p className="text-sm mt-2">
               There was an error signing in. Please try again.
