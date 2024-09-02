@@ -1,5 +1,6 @@
 import React from "react";
 import "@fontsource/poppins";
+import { Suspense } from "react";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -8,7 +9,9 @@ interface AuthLayoutProps {
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   return (
     <div className="flex flex-col font-['Poppins'] items-center justify-center h-screen bg-[#23465d]">
-        { children }
+        <Suspense>
+          { children }
+        </Suspense>
     </div>
   );
 };
