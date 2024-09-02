@@ -68,10 +68,10 @@ const PasswordReset = () => {
         </form>
       ) : (
         <span className="p-10 flex flex-col items-center gap-5">
-          <h1 className="text-4xl ml-32 mr-32">
+          <h1 className="text-4xl ml-32 mr-32 max-sm:ml-5 max-sm:mr-5 max-sm:text-center">
             Password reset link has been successfully sent!
           </h1>
-          <p className="text-lg ml-32 mr-32">
+          <p className="text-lg ml-32 mr-32 max-sm:ml-5 max-sm:mr-5 max-sm:text-center">
             An email has been sent out with instructions on how to reset your
             password.
           </p>
