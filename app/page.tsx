@@ -29,7 +29,7 @@ export default function Home() {
             Struggling to plan an accessible vacation?
           </h1>
           <p className="text-lg md:text-xl">
-            IncludiTrip takes the stress out of travel planning and offers accessible options!
+            IncludiTrip takes the stress out of travel planning and offers accessiblity options!
           </p>
           </div>
 
@@ -62,7 +62,7 @@ export default function Home() {
               <li>Hotel booking</li>
               <li>Transport options</li>
               <li>Local event alerts</li>
-              <li>Accessible options</li>
+              <li>Accessiblity options</li>
             </ul>
             <br></br>
             and much more!
