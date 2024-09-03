@@ -105,6 +105,7 @@ const Signup = () => {
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
         <form onSubmit={handleSubmit} className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]">
           <span className="max-sm:p-4 flex flex-col items-left text-left rounded-lg space-y-4">
+            <label className="font-bold text-3xl">Join The Waitlist!</label>
             <span className="grid grid-cols-2 max-sm:grid-cols-1 items-center gap-5">
               <span className="flex flex-col items-left text-left space-y-5">
                 <label className="font-bold">First name</label>
@@ -225,9 +226,8 @@ const Signup = () => {
             </button>
             <label className="font-light mt-5">
               <i>
-                By signing up, you agree to our Terms of Service and Privacy
-                Policy, and that you are 18 years old or older to use our
-                Service.
+                By joining the waitlist, you agree that you are 18 years old or older to use our
+                Service, and that all information above is true to the best of your knowledge.
                 <br></br>
                 <br></br>
                 The falsification of information under any circumstance may

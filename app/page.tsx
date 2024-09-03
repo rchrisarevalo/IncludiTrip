@@ -56,9 +56,9 @@ export default function Home() {
             Start your adventure today with the AI Travel App by having it find the best hotels for you!
           </p>
           <Link 
-            href="/login" 
+            href="/signup" 
             className="inline-block bg-[#23465d] text-white font-extrabold px-8 py-5 border-slate-400 border-4 rounded-lg hover:bg-slate-300 hover:text-black hover:border-[#23465d] transition duration-300">
-              Take me to my next adventure!
+              Join The Waitlist
           </Link>
         </article>
       </section>
