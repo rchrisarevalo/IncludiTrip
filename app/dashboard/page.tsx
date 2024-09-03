@@ -31,7 +31,7 @@ const Dashboard = () => {
             If you came across this page, this means you are on a waitlist!
           </p>
           <p className="text-xl ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
-            More updates will be provided in the coming days as we continue to
+            More updates will be provided as we continue to
             develop IncludiTravel, which helps provide not only personalized
             itineraries, but also provides accessibility resources for people
             with disabilities.
