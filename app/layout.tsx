@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { initGA, logPageView } from "../utils/analytics";
+import AnalyticsInitializer from "./components/AnalyticsInitializer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,20 +25,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const router = useRouter();
-
-  useEffect(() => {
-    initGA();
-    logPageView();
-    router.events.on("routeChangeComplete", logPageView);
-    return () => {
-      router.events.off("routeChangeComplete", logPageView);
-    };
-  }, [router.events]);
-
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <AnalyticsInitializer />
+        {children}
+      </body>
     </html>
   );
 }
