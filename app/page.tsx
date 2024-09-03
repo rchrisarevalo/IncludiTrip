@@ -47,8 +47,8 @@ export default function Home() {
       </section>
 
       <section className="flex flex-col items-center justify-center w-full text-center px-4 py-8 mt-24">
-        <article className="max-w-2xl space-y-14">
-          <h1 className="text-5xl md:text-5xl font-bold">
+        <article className="max-w-2xl space-y-14 text-black">
+          <h1 className="text-3xl md:text-5xl font-bold">
             What does IncludiTrip do?
           </h1>
           <h2 className="text-lg md:text-xl font-semibold">

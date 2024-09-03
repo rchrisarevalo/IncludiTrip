@@ -2,16 +2,25 @@
 import { useEffect, useState } from "react";
 import { calculateAge } from "../functions/CalculateAge";
 import mainLogo from "../images/mainLogo.png";
+import { auth, db } from "@/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 
 type SignUpForm = {
   first_name: string;
   middle_name: string;
   last_name: string;
   email: string;
+  password: string;
   dob: string;
   disability_status: string;
   disabilities_list: string[];
-  age: number
+  age: number;
 };
 
 const Signup = () => {
@@ -20,10 +29,11 @@ const Signup = () => {
     middle_name: "",
     last_name: "",
     email: "",
+    password: "",
     dob: "",
     disability_status: "",
     disabilities_list: [],
-    age: 0
+    age: 0,
   });
 
   const handleFormChange = (
@@ -32,15 +42,39 @@ const Signup = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Function that handles the submission of the form for a new user sign up.
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     // Perform database operations to store relevant information
-    // in DB in API route (except the age itself, which will be 
+    // in DB in API route (except the age itself, which will be
     // calculated with the same function that was used in this page when
     // displaying it in a user's account).
     //
     // Set up API route HERE...
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        form.email,
+        form.password
+      );
+      const user = userCredential.user;
+      console.log("User created: ", user);
+
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        first_name: form.first_name,
+        middle_name: form.middle_name,
+        last_name: form.last_name,
+        email: form.email,
+        dob: form.dob,
+        disability_status: form.disability_status,
+        disabilities_list: form.disabilities_list,
+        age: form.age,
+      });
+    } catch (e) {
+      console.error("Error creating user: ", e);
+    }
   };
 
   // Function that allows for disabilities to be displayed
@@ -48,13 +82,16 @@ const Signup = () => {
   const handleDisabilityList = (input: string) => {
     // Split the disability names by comma to display a more
     // organized list.
-    setForm({...form, disabilities_list: input != "" ? input.split(/[\s,]+/) : []});
+    setForm({
+      ...form,
+      disabilities_list: input != "" ? input.split(",") : [],
+    });
   };
 
   const handleCalculateAge = (birthday: string) => {
-    const age = calculateAge(birthday)
-    setForm({...form, dob: birthday, age: age})
-  }
+    const age = calculateAge(birthday);
+    setForm({ ...form, dob: birthday, age: age });
+  };
 
   return (
     <>
@@ -79,9 +116,7 @@ const Signup = () => {
                 />
               </span>
               <span className="flex flex-col items-left text-left space-y-5">
-                <label className="font-bold">
-                  Middle name (if applicable)
-                </label>
+                <label className="font-bold">Middle name (if applicable)</label>
                 <input
                   name="middle_name"
                   className="p-2 border border-solid border-black rounded-md"
@@ -101,6 +136,14 @@ const Signup = () => {
               name="email"
               className="p-2 border border-solid border-black rounded-md"
               type="email"
+              onChange={handleFormChange}
+              required
+            />
+            <label className="font-bold">Password</label>
+            <input
+              name="password"
+              className="p-2 border border-solid border-black rounded-md"
+              type="password"
               onChange={handleFormChange}
               required
             />
@@ -176,7 +219,7 @@ const Signup = () => {
             <button
               className="p-3 bg-black text-white rounded-md mt-10"
               type="submit"
-              disabled={(form.dob != "" && form.age < 18)}
+              disabled={form.dob != "" && form.age < 18}
             >
               Sign Up
             </button>
@@ -184,14 +227,19 @@ const Signup = () => {
               <i>
                 By signing up, you agree to our Terms of Service and Privacy
                 Policy, and that you are 18 years old or older to use our
-                Service. 
+                Service.
                 <br></br>
                 <br></br>
-                The falsification of information under any circumstance
-                may result in your account being <b className="font-bold">immediately terminated</b>.
+                The falsification of information under any circumstance may
+                result in your account being{" "}
+                <b className="font-bold">immediately terminated</b>.
               </i>
             </label>
-            {(form.dob != "" && form.age < 18) && <label className="font-bold mt-5 text-red-500">You are under 18 years old.</label>}
+            {form.dob != "" && form.age < 18 && (
+              <label className="font-bold mt-5 text-red-500">
+                You are under 18 years old.
+              </label>
+            )}
           </span>
         </form>
       </span>
