@@ -60,7 +60,7 @@ export default function Home() {
             <ul>
               <li>Flight selections</li>
               <li>Hotel booking</li>
-              <li>Transport option</li>
+              <li>Transport options</li>
               <li>Local event alerts</li>
               <li>Accessible options</li>
             </ul>
