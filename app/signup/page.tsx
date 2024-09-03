@@ -96,11 +96,11 @@ const Signup = () => {
   return (
     <>
       <span className="flex items-center justify-center min-h-screen max-sm:min-h-10 bg-[#23465d]">
-      <img
+        <img
           src={mainLogo.src}
           alt="IncludiTrip, Take it Easy logo"
           className="w-1/2 h-auto"
-          />
+        />
       </span>
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
         <form onSubmit={handleSubmit} className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]">

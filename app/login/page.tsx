@@ -74,7 +74,7 @@ const Login = () => {
 
   return (
     <>
-      <span className="min-h-screen flex text-center justify-center items-center bg-[#23465d]">
+      <span className="min-h-screen max-sm:min-h-10 flex text-center justify-center items-center bg-[#23465d]">
         <img
           src={mainLogo.src}
           alt="IncludiTrip, Take it Easy logo"
