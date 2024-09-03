@@ -26,10 +26,10 @@ export default function Home() {
       <section className="flex flex-col p-8 md:p-24 md:flex-row items-center justify-center h-screen w-full bg-[#23465d] text-white">
       <div className="flex flex-1 flex-col justify-center items-start text-center md:text-left md:max-w-lg px-4 md:px-8 space-y-6">
           <h1 className="text-3xl md:text-5xl font-bold">
-            Struggling to plan your next vacation?
+            Struggling to plan an accessible vacation?
           </h1>
           <p className="text-lg md:text-xl">
-            Look no further! IncludiTrip takes the stress out of travel planning.
+            IncludiTrip takes the stress out of travel planning and offers accessible options!
           </p>
           </div>
 
@@ -51,10 +51,22 @@ export default function Home() {
           <h1 className="text-3xl md:text-5xl font-bold">
             What does IncludiTrip do?
           </h1>
-          <p className="text-lg md:text-xl">
+          <h2 className="text-lg md:text-xl font-semibold">
             Get personalized travel recommendations tailored to your budget and preferences.
-            Start your adventure today with the AI Travel App by having it find the best hotels for you!
-          </p>
+            <br></br>
+            <br></br>
+            IncludiTrip includies:
+            <br></br>
+            <ul>
+              <li>flight slections</li>
+              <li>hotel booking</li>
+              <li>transport option</li>
+              <li>local event alerts</li>
+              <li>accessible options</li>
+            </ul>
+            <br></br>
+            and much more!
+          </h2>
           <Link 
             href="/signup" 
             className="inline-block bg-[#23465d] text-white font-extrabold px-8 py-5 border-slate-400 border-4 rounded-lg hover:bg-slate-300 hover:text-black hover:border-[#23465d] transition duration-300">
