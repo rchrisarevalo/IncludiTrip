@@ -74,13 +74,15 @@ const Login = () => {
 
   return (
     <>
-      <span className="min-h-screen max-sm:min-h-10 flex text-center justify-center items-center bg-[#23465d]">
-        <img
-          src={mainLogo.src}
-          alt="IncludiTrip, Take it Easy logo"
-          className="w-1/2 h-auto"
+      <Link href="/">
+        <span className="min-h-screen max-sm:min-h-10 flex text-center justify-center items-center bg-[#23465d]">
+          <img
+              src={mainLogo.src}
+              alt="IncludiTrip, Take it Easy logo"
+              className="w-1/2 h-auto"
           />
-      </span>
+        </span>
+      </Link>
       <span className="min-h-screen flex text-center justify-center items-center bg-white text-black">
         <form
           onSubmit={handleSignIn}
@@ -117,7 +119,7 @@ const Login = () => {
               Sign In with Google
             </button>
             <button className="text-sm mt-5 font-bold" type="button">
-              <Link href="/signup">Create an account</Link>
+              <Link href="/signup">Create An Account</Link>
             </button>
             <button className="text-sm mt-1 font-bold" type="button">
               <Link href="/reset_password">Forgot password? Click here!</Link>
