@@ -230,8 +230,7 @@ const Signup = () => {
                 Service, and that all information above is true to the best of your knowledge.
                 <br></br>
                 <br></br>
-                The falsification of information under any circumstance may
-                result in your account being{" "}
+                Providing false information may result in your account being{" "}
                 <b className="font-bold">immediately terminated</b>.
               </i>
             </label>
