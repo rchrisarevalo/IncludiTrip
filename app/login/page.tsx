@@ -90,7 +90,7 @@ const Login = () => {
         >
           <label className="p-1 font-bold">Email</label>
           <input
-            type="text"
+            type="email"
             name="username"
             required
             onChange={handleFormChange}
