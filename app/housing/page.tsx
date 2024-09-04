@@ -8,6 +8,7 @@ type HousingForm = {
   state: string;
   city: string;
   country: string;
+  disability: string;
 };
 
 const Housing = () => {
@@ -19,17 +20,57 @@ const Housing = () => {
     state: "",
     city: "",
     country: "",
+    disability: "Blindness",
   });
 
   // Function that handles the form submission.
-  const handleSubmission = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      const user_prompt = `
+        Generate suggested destinations within the provided city based on the following information:
+        Travel start date: ${form.start_date},
+        Travel end date: ${form.end_date},
+        Travel budget: ${form.budget_range},
+        Destination: ${form.city}, ${form.state}, ${form.country},
+
+        Provide specific accessibility services for ${form.disability} only.
+      `;
+      console.log(user_prompt);
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            role: "user",
+            content: user_prompt,
+          },
+        ]),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+      } else {
+        throw new Error("Failed to generate suggestions.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   // Function that updates form values.
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  // // Separate function that updates form from selection option.
+  // const handleSelectionChange = (e: React.ChangeEventHandler<HTMLSelectElement>) => {
+  //   setForm({ ...form, [e.target.]})
+  // }
 
   // useEffect hook that automatically changes the end date
   // if the user selects a start date greater than the current
@@ -42,6 +83,7 @@ const Housing = () => {
     ) {
       setForm({ ...form, end_date: form.start_date });
     }
+    console.log(form);
   }, [form]);
 
   return (
@@ -79,6 +121,7 @@ const Housing = () => {
           <select
             className="border border-solid border-black p-2 rounded-md"
             name="budget_range"
+            onChange={(e) => setForm({ ...form, budget_range: e.target.value })}
             required
           >
             <option value="$0-$500">$0-$500</option>
@@ -91,6 +134,7 @@ const Housing = () => {
               <input
                 className="border border-solid border-black p-2 rounded-md"
                 name="city"
+                onChange={handleFormChange}
                 required
               />
             </span>
@@ -99,6 +143,7 @@ const Housing = () => {
               <input
                 className="border border-solid border-black p-2 rounded-md"
                 name="state"
+                onChange={handleFormChange}
                 required
               />
             </span>
@@ -107,6 +152,7 @@ const Housing = () => {
           <input
             className="border border-solid border-black p-2 rounded-md"
             name="country"
+            onChange={handleFormChange}
             required
           />
           <button className="p-5 mt-5 bg-black rounded-md text-white">

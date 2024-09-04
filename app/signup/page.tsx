@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { calculateAge } from "../functions/CalculateAge";
 import mainLogo from "../images/mainLogo.png";
@@ -96,14 +97,17 @@ const Signup = () => {
   return (
     <>
       <span className="flex items-center justify-center min-h-screen max-sm:min-h-10 bg-[#23465d]">
-        <img
-          src={mainLogo.src}
+        <Image
+          src={mainLogo}
           alt="IncludiTrip, Take it Easy logo"
           className="w-1/2 h-auto"
         />
       </span>
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
-        <form onSubmit={handleSubmit} className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]">
+        <form
+          onSubmit={handleSubmit}
+          className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]"
+        >
           <span className="max-sm:p-4 flex flex-col items-left text-left rounded-lg space-y-4">
             <label className="font-bold text-3xl">Join The Waitlist!</label>
             <span className="grid grid-cols-2 max-sm:grid-cols-1 items-center gap-5">
@@ -226,8 +230,9 @@ const Signup = () => {
             </button>
             <label className="font-light mt-5">
               <i>
-                By joining the waitlist, you agree that you are 18 years old or older to use our
-                Service, and that all information above is true to the best of your knowledge.
+                By joining the waitlist, you agree that you are 18 years old or
+                older to use our Service, and that all information above is true
+                to the best of your knowledge.
                 <br></br>
                 <br></br>
                 The falsification of information under any circumstance may
