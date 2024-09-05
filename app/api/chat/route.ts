@@ -25,7 +25,7 @@ const POST = async (req: NextRequest) => {
         chatCompletion.choices[0].message.content as string
       );
 
-      console.log(res);
+      console.log(res)
 
       return NextResponse.json({
         content: res,
