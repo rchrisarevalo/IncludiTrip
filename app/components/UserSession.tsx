@@ -108,7 +108,7 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
           <p>Error!</p>
         )
       ) : (
-        <h1 className="text-3xl bg-[#23465d] min-h-screen flex flex-row items-center justify-center font-bold">
+        <h1 className="text-3xl bg-[#23465d] text-white min-h-screen flex flex-row items-center justify-center font-bold">
           Loading...
         </h1>
       )}
@@ -133,7 +133,7 @@ const PublicRoute: React.FC<UserSessionProps> = ({ children }) => {
           <p>Error!</p>
         )
       ) : (
-        <h1 className="text-3xl bg-[#23465d] min-h-screen flex flex-row items-center justify-center font-bold">
+        <h1 className="text-3xl bg-[#23465d] text-white font-['Poppins'] min-h-screen flex flex-row items-center justify-center font-bold">
           Loading...
         </h1>
       )}

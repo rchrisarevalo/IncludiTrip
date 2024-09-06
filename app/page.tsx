@@ -29,7 +29,7 @@ export default function Home() {
             Struggling to plan an accessible vacation?
           </h1>
           <p className="text-lg md:text-xl">
-            IncludiTrip takes the stress out of travel planning and offers accessible options!
+            IncludiTrip takes the stress out of travel planning and offers accessiblity options!
           </p>
           </div>
 
@@ -55,14 +55,14 @@ export default function Home() {
             Get personalized travel recommendations tailored to your budget and preferences.
             <br></br>
             <br></br>
-            IncludiTrip includies:
+            IncludiTrip includes:
             <br></br>
             <ul>
-              <li>flight slections</li>
-              <li>hotel booking</li>
-              <li>transport option</li>
-              <li>local event alerts</li>
-              <li>accessible options</li>
+              <li>Flight selections</li>
+              <li>Hotel booking</li>
+              <li>Transport options</li>
+              <li>Local event alerts</li>
+              <li>Accessiblity options</li>
             </ul>
             <br></br>
             and much more!
@@ -73,6 +73,8 @@ export default function Home() {
               Join The Waitlist
           </Link>
         </article>
+        <br></br>
+        <br></br>
       </section>
     </main>
   );

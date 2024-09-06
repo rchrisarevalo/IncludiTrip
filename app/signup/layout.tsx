@@ -8,11 +8,11 @@ interface SignUpLayoutProps {
 
 const SignUpLayout: React.FC<SignUpLayoutProps> = ({ children }) => {
     return (
-        <div className="grid grid-cols-2 max-sm:grid-cols-1 w-full items-center font-['Poppins'] text-center justify-center min-h-screen bg-[#23465d]">
-            <PublicRoute>
+        <PublicRoute>
+            <div className="grid grid-cols-2 max-sm:grid-cols-1 w-full items-center font-['Poppins'] text-center justify-center min-h-screen bg-[#23465d]">
                 { children }
-            </PublicRoute>
-        </div>
+            </div>
+        </PublicRoute>
     )
 }
 

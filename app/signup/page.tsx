@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
+import Link from "next/link";
 
 type SignUpForm = {
   first_name: string;
@@ -96,20 +97,24 @@ const Signup = () => {
 
   return (
     <>
-      <span className="flex items-center justify-center min-h-screen max-sm:min-h-10 bg-[#23465d]">
-        <Image
-          src={mainLogo}
-          alt="IncludiTrip, Take it Easy logo"
-          className="w-1/2 h-auto"
-        />
-      </span>
+      <Link href="/">
+        <span className="flex items-center justify-center min-h-screen max-sm:min-h-10 bg-[#23465d]">
+          <img
+            src={mainLogo.src}
+            alt="IncludiTrip, Take it Easy logo"
+            className="w-1/2 h-auto"
+          />
+        </span>
+      </Link>
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
         <form
           onSubmit={handleSubmit}
           className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]"
         >
           <span className="max-sm:p-4 flex flex-col items-left text-left rounded-lg space-y-4">
-            <label className="font-bold text-3xl">Join The Waitlist!</label>
+            <label className="font-bold text-3xl">Join the waitlist!</label>
+            <label className="font-bold text-md">Already have an account? <u><Link href="/login">Log in here.</Link></u></label>
+            <br></br>
             <span className="grid grid-cols-2 max-sm:grid-cols-1 items-center gap-5">
               <span className="flex flex-col items-left text-left space-y-5">
                 <label className="font-bold">First name</label>
@@ -235,8 +240,7 @@ const Signup = () => {
                 to the best of your knowledge.
                 <br></br>
                 <br></br>
-                The falsification of information under any circumstance may
-                result in your account being{" "}
+                Providing false information may result in your account being{" "}
                 <b className="font-bold">immediately terminated</b>.
               </i>
             </label>
