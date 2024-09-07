@@ -177,7 +177,15 @@ const Housing = () => {
           {suggestions.destination_suggestions.length != 0 && (
             <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
               <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
-                <h1 className="text-2xl font-bold">Travel Suggestions</h1>
+                <h1 className="text-3xl font-bold">Travel Suggestions</h1>
+                <p className="font-bold">
+                  <i>
+                    * Please note that the AI used for these suggestions may
+                    display incorrect/inaccurate information. It is highly
+                    recommended to verify the suggestions and accessibility
+                    resources below through additional research.
+                  </i>
+                </p>
                 <p>
                   These are your suggested destinations based on your trip to{" "}
                   <b>
@@ -191,13 +199,22 @@ const Housing = () => {
                 </p>
                 <span className="m-2 overflow-y-scroll">
                   <span className="flex flex-col space-y-10">
-                    {suggestions.destination_suggestions.map((suggestion, i) => (
-                      <figure className="p-10 space-y-5 bg-slate-300 rounded-lg" key={`destination-${i}`}>
-                        <h3 className="text-2xl font-bold">{suggestion.name}</h3>
-                        <p className="text-lg"><i>{suggestion.destination_description}</i></p>
-                        <p className="text-lg">{suggestion.accessibility}</p>
-                      </figure>
-                    ))}
+                    {suggestions.destination_suggestions.map(
+                      (suggestion, i) => (
+                        <figure
+                          className="p-10 space-y-5 bg-slate-300 rounded-lg"
+                          key={`destination-${i}`}
+                        >
+                          <h3 className="text-2xl font-bold">
+                            {suggestion.name}
+                          </h3>
+                          <p className="text-lg">
+                            <i>{suggestion.destination_description}</i>
+                          </p>
+                          <p className="text-lg">{suggestion.accessibility}</p>
+                        </figure>
+                      )
+                    )}
                   </span>
                 </span>
               </span>

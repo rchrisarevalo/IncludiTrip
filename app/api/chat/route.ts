@@ -14,18 +14,16 @@ const POST = async (req: NextRequest) => {
     if (process.env.GROQ_PROMPT) {
       const chatCompletion = await groq.chat.completions.create({
         messages: [
-          { role: "system", content: process.env.GROQ_PROMPT },
           ...data,
+          { role: "system", content: process.env.GROQ_PROMPT },
         ],
-        model: "llama3-8b-8192",
+        model: "llama3-70b-8192",
         response_format: { type: "json_object" },
       });
 
       const res: string | null = JSON.parse(
         chatCompletion.choices[0].message.content as string
       );
-
-      console.log(res)
 
       return NextResponse.json({
         content: res,
