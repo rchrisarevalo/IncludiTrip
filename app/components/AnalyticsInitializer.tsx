@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { initGA, logPageView } from "../utils/analytics";
+import { initGA, logPageView } from "../services/analytics";
 
 const AnalyticsInitializer = () => {
   const pathname = usePathname();
