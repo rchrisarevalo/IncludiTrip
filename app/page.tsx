@@ -26,7 +26,7 @@ export default function Home() {
         </div>
       </nav>
       <section className="flex flex-col p-8 md:p-24 md:flex-row items-center justify-center min-h-screen w-full bg-[#23465d] text-white">
-      <div className="flex flex-1 flex-col justify-center items-start md:items-center text-center md:text-left px-4 md:px-8 space-y-6">
+      <div className="flex flex-1 flex-col justify-center items-center md:items-start text-center md:text-left px-4 md:px-8 space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold">
             Struggling to plan an accessible vacation?
           </h1>
@@ -90,34 +90,35 @@ export default function Home() {
       </section>
 
       <section id="instructions" className="w-full flex flex-col items-center justify-center text-center px-4 py-8 mt-24 mb-24 bg-[#f5f5f5]">
-        <article className="max-w-screen-xl w-full space-y-14 text-black">
-          <h1 className="text-3xl md:text-5xl font-bold mb-8">
-            How to Get Started
-          </h1>
-          <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center">
-            <div className="w-full md:w-72 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">1. Create an Account</h2>
-              <p>Create an account or sign in to IncludiTrip.</p>
-            </div>
-            <div className="w-full md:w-72 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">2. Set Preferences</h2>
-              <p>Set your preferences and accessibility requirements.</p>
-            </div>
-            <div className="w-full md:w-72 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">3. Get Recommendations</h2>
-              <p>Get personalized travel recommendations and plan your trip.</p>
-            </div>
-            <div className="w-full md:w-72 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">4. Book Your Trip</h2>
-              <p>Book your flights, hotels, and transport options with ease.</p>
-            </div>
-            <div className="w-full md:w-72 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
-              <h2 className="text-xl md:text-2xl font-bold mb-4">5. Enjoy Your Vacation</h2>
-              <p>Enjoy your stress-free and accessible vacation!</p>
-            </div>
-          </div>
-        </article>
-      </section>
+  <article className="max-w-screen-xl w-full space-y-14 text-black">
+    <h1 className="text-3xl md:text-5xl font-bold mb-8">
+      How to Get Started
+    </h1>
+    <div className="flex flex-col items-center gap-8">
+      <div className="w-full max-w-88 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">1. Create an Account</h2>
+        <p>Create an account or sign in to IncludiTrip.</p>
+      </div>
+      <div className="w-full max-w-88 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">2. Set Preferences</h2>
+        <p>Set your preferences and accessibility requirements.</p>
+      </div>
+      <div className="w-full max-w-88 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">3. Get Recommendations</h2>
+        <p>Get personalized travel recommendations and plan your trip.</p>
+      </div>
+      <div className="w-full max-w-88 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">4. Book Your Trip</h2>
+        <p>Book your flights, hotels, and transport options with ease.</p>
+      </div>
+      <div className="w-full max-w-88 p-6 bg-white text-[#23465d] rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition duration-300 ease-in-out">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">5. Enjoy Your Vacation</h2>
+        <p>Enjoy your stress-free and accessible vacation!</p>
+      </div>
+    </div>
+  </article>
+</section>
+
 
       <footer className="w-full bg-white text-black py-8 px-8">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between">
