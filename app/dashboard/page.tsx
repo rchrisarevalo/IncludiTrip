@@ -25,14 +25,14 @@ const Dashboard = () => {
 
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f5f5f5] p-6 gap-10">
-        <span className="ml-32 mr-32 max-sm:ml-1 max-sm:mr-1 space-y-5 text-center">
+        <span className="ml-32 mr-32 max-sm:ml-1 max-sm:mr-1 space-y-5 text-center text-[#23465d]">
           <h1 className="text-5xl font-bold mb-4 text-[#23465d]">Hi there!</h1>
           <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
             If you came across this page, this means you are on our waitlist!
           </p>
           <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
             More updates will be provided as we continue to
-            develop IncludiTrip,which offers not only personalized itineraries but also accessibility
+            develop IncludiTrip, which offers not only personalized itineraries but also accessibility
             resources for people with disabilities.
           </p>
           <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
