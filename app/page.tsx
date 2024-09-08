@@ -86,7 +86,6 @@ export default function Home() {
           <h2 className="text-lg md:text-xl font-semibold">
             ...and much more!
           </h2>
-
         </article>
       </section>
 
