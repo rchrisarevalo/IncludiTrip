@@ -7,11 +7,11 @@ interface DashboardLayoutProps {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     return (
-        <div className="min-h-screen bg-[#23465d] flex flex-col items-center font-['Poppins'] justify-center gap-10">
-            <ProtectedRoute>
+        <ProtectedRoute>
+            <div className="min-h-screen bg-[#23465d] flex flex-col items-center font-['Poppins'] justify-center gap-10">
                 { children }
-            </ProtectedRoute>
-        </div>
+            </div>
+        </ProtectedRoute>
     )
 }
 

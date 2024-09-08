@@ -2,11 +2,13 @@ import React from "react";
 import "@fontsource/poppins";
 import { ProtectedRoute } from "../components/UserSession";
 
-interface HousingPageLayoutProps {
+interface TestAudioPageLayoutProps {
   children: React.ReactNode;
 }
 
-const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
+const TestAudioPageLayout: React.FC<TestAudioPageLayoutProps> = ({
+  children,
+}) => {
   return (
     <ProtectedRoute>
       <div className="bg-[#23465d] flex flex-col font-['Poppins'] items-center justify-center h-screen">
@@ -16,4 +18,4 @@ const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
   );
 };
 
-export default HousingLayout;
+export default TestAudioPageLayout;

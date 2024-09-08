@@ -2,12 +2,13 @@
 import { auth } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { useSignOut } from 'react-firebase-hooks/auth';
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 
 const Dashboard = () => {
 
     const [signOut, loading, error] = useSignOut(auth)
     const router = useRouter()
+    const [user] = useAuthState(auth)
 
     const handleSignOut = async () => {
         try {

@@ -64,7 +64,7 @@ const ChangePassword = () => {
       }
     };
     verifyMode();
-  }, [curUser]);
+  }, [curUser, param]);
 
   const handlePasswordResetSubmission = async (
     e: React.FormEvent<HTMLFormElement>
@@ -115,10 +115,11 @@ const ChangePassword = () => {
                   Email verification link has expired or no longer exists.
                 </h1>
                 <br></br>
-                <button
-                  type="submit"
-                >
-                  <Link href="/login" className="bg-white rounded-lg p-5 text-black font-bold pl-10 pr-10">
+                <button type="submit">
+                  <Link
+                    href="/login"
+                    className="bg-white rounded-lg p-5 text-black font-bold pl-10 pr-10"
+                  >
                     Sign In
                   </Link>
                 </button>
@@ -129,10 +130,11 @@ const ChangePassword = () => {
                 <h1 className="text-3xl font-bold text-center">
                   Unauthorized access. Please sign back in.
                 </h1>
-                <button
-                  type="submit"
-                >
-                  <Link href="/login" className="bg-white rounded-lg p-5 text-black font-bold pl-10 pr-10">
+                <button type="submit">
+                  <Link
+                    href="/login"
+                    className="bg-white rounded-lg p-5 text-black font-bold pl-10 pr-10"
+                  >
                     Sign In
                   </Link>
                 </button>

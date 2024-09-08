@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { calculateAge } from "../functions/CalculateAge";
 import mainLogo from "../images/mainLogo.png";
 import { auth, db } from "@/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -53,6 +53,11 @@ const Signup = () => {
     //
     // Set up API route HERE...
 
+    if (form.password.length < 6) {
+      alert("Password must be at least 6 characters long.");
+      return;
+    }
+
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -62,8 +67,8 @@ const Signup = () => {
       const user = userCredential.user;
       console.log("User created: ", user);
 
-      await addDoc(collection(db, "users"), {
-        uid: user.uid,
+      // Create user document in Firestore
+      await setDoc(doc(db, "users", user.uid), {
         first_name: form.first_name,
         middle_name: form.middle_name,
         last_name: form.last_name,
@@ -72,6 +77,7 @@ const Signup = () => {
         disability_status: form.disability_status,
         disabilities_list: form.disabilities_list,
         age: form.age,
+        transcriptions: [],
       });
     } catch (e) {
       console.error("Error creating user: ", e);
@@ -106,10 +112,18 @@ const Signup = () => {
         </span>
       </Link>
       <span className="flex items-center justify-center min-h-screen bg-white text-black">
-        <form onSubmit={handleSubmit} className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]">
+        <form
+          onSubmit={handleSubmit}
+          className="p-10 mt-10 mb-10 overflow-y-auto w-screen max-h-[85vh]"
+        >
           <span className="max-sm:p-4 flex flex-col items-left text-left rounded-lg space-y-4">
             <label className="font-bold text-3xl">Join the waitlist!</label>
-            <label className="font-bold text-md">Already have an account? <u><Link href="/login">Log in here.</Link></u></label>
+            <label className="font-bold text-md">
+              Already have an account?{" "}
+              <u>
+                <Link href="/login">Log in here.</Link>
+              </u>
+            </label>
             <br></br>
             <span className="grid grid-cols-2 max-sm:grid-cols-1 items-center gap-5">
               <span className="flex flex-col items-left text-left space-y-5">
@@ -231,8 +245,9 @@ const Signup = () => {
             </button>
             <label className="font-light mt-5">
               <i>
-                By joining the waitlist, you agree that you are 18 years old or older to use our
-                Service, and that all information above is true to the best of your knowledge.
+                By joining the waitlist, you agree that you are 18 years old or
+                older to use our Service, and that all information above is true
+                to the best of your knowledge.
                 <br></br>
                 <br></br>
                 Providing false information may result in your account being{" "}
