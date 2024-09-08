@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
 import { handleAudioInput } from "../services/transcribeAudio";
