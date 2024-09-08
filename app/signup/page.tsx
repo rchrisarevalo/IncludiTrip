@@ -77,6 +77,7 @@ const Signup = () => {
         disability_status: form.disability_status,
         disabilities_list: form.disabilities_list,
         age: form.age,
+        uid: user.uid,
         transcriptions: [],
       });
     } catch (e) {
