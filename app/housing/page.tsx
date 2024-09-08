@@ -1,5 +1,7 @@
 "use client";
+import { auth } from "@/firebase";
 import React, { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import Markdown from "react-markdown";
 
 type HousingForm = {
@@ -32,6 +34,27 @@ const Housing = () => {
     country: "",
     destination_suggestions: [],
   });
+  const [user] = useAuthState(auth)
+
+  console.log(user)
+
+  useEffect(() => {
+    // const fetchUserData = async () => {
+    //   try {
+    //     const res = await fetch('/api/retrieve_user_info', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: {
+
+    //       }
+    //     })
+    //   } catch (error) {
+  
+    //   }
+    // }
+  }, [user])
 
   // Function that handles the form submission.
   const handleSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
