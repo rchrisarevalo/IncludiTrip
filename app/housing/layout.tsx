@@ -9,7 +9,7 @@ interface HousingPageLayoutProps {
 const HousingLayout: React.FC<HousingPageLayoutProps> = ({ children }) => {
   return (
     <ProtectedRoute>
-      <div className="bg-[#23465d] flex flex-col font-['Poppins'] items-center justify-center h-screen">
+      <div className="bg-[#23465d] flex flex-col font-['Poppins'] min-h-screen items-center justify-center">
         {children}
       </div>
     </ProtectedRoute>

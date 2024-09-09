@@ -199,7 +199,7 @@ const Housing = () => {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 mt-[10vh] mb-[10vh]">
       <span className="space-y-10">
         <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
           See your travel possibilities!
@@ -207,8 +207,8 @@ const Housing = () => {
         <span
           className={
             suggestions.destination_suggestions.length != 0
-              ? hotels.length == 0 ? `grid grid-cols-2 max-sm:grid-cols-1 gap-10` : `grid grid-cols-3 max-sm:grid-cols-1 gap-10`
-              : `grid grid-cols-1 max-sm:grid-cols-1 gap-10`
+              ? hotels.length == 0 ? `grid grid-cols-2 justify-items-center max-sm:grid-cols-1 gap-10` : `grid grid-cols-3 justify-items-center max-sm:grid-cols-1 gap-10`
+              : `grid grid-cols-1 justify-items-center max-sm:grid-cols-1 gap-10`
           }
         >
           <form
