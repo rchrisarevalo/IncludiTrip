@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   useAuthState,
   useSendEmailVerification,
@@ -22,8 +22,12 @@ interface UserSessionProps {
 const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
   const [user, loading, error] = useAuthState(auth);
   const [signOut, signOutLoading, signOutError] = useSignOut(auth);
-  const [sendVerification, verificationLoading, verificationError] =
+  const [sendVerification] =
     useSendEmailVerification(auth);
+  
+  const [verificationLoading, setVerificationLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -43,14 +47,27 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
   const handleSendEmailVerification = async () => {
     try {
       const verificationSent = await sendVerification();
+      
+      setVerificationError(false)
+      setEmailSent(true)
 
       if (!verificationSent) {
         throw new Error("Verification email failed to be sent.")
+      } else {
+        setVerificationLoading(false)
       }
     } catch (error) {
+      setEmailSent(false)
+      setVerificationError(true)
       console.error(error);
+    } finally {
+      setVerificationLoading(false)
     }
   };
+
+  useEffect(() => {
+    console.log(emailSent)
+  }, [emailSent])
 
   return (
     <>
@@ -60,17 +77,26 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
             user?.emailVerified ? (
               children
             ) : (
-              <>
-                <h1 className="text-3xl text-center">
-                  Please verify your email first before you proceed.
+              <span className="bg-[#23465d] flex flex-col font-['Poppins'] min-h-screen items-center justify-center gap-10">
+                <h1 className="text-3xl text-center ml-64 mr-64 max-sm:ml-16 max-sm:mr-16">
+                  {!emailSent ?
+                    <>Please verify your email first before you proceed.</>
+                    :
+                    <>Verification email sent! <br></br><br></br> Please follow the instructions listed in the email to proceed using <b>IncludiTrip!</b></>
+                  }
                 </h1>
                 {signOutLoading ? (
                   !error && (
                     <>
                       <button
                         onClick={handleSignOut}
-                        className="bg-white rounded-lg text-black p-5 pl-10 pr-10 font-bold"
-                        disabled
+                        className={
+                         !emailSent ?
+                          "bg-white rounded-lg text-black p-5 pl-10 pr-10 font-bold"
+                          :
+                          "bg-white rounded-lg text-black p-5 pl-10 pr-10 opacity-10 font-bold"
+                        }
+
                       >
                         Signing out...
                       </button>
@@ -80,15 +106,24 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
                   <>
                     <button
                       onClick={handleSendEmailVerification}
-                      className="bg-white rounded-lg text-black p-5 pl-10 pr-10 font-bold"
+                      className={
+                        !emailSent ?
+                         "bg-white rounded-lg text-black p-5 pl-10 pr-10 font-bold"
+                         :
+                         "bg-white rounded-lg text-black p-5 pl-10 pr-10 opacity-50 font-bold"
+                       }
+                       disabled={emailSent ? true : false}
                     >
-                      {verificationLoading ?
-                        !verificationError ?
-                          <>Verification email sent!</>
+                      {emailSent ?
+                        !verificationLoading ?
+                          !verificationError ?
+                            <>Verification email sent!</>
+                            :
+                            <>Verification email failed to be sent.</>
                           :
-                          <>Verification mail failed to be sent.</>
+                          <>Sending email...</>
                         :
-                        <>Verify Email</>
+                        <>Verify Your Email</>
                       }
                     </button>
                     <button
@@ -99,7 +134,7 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
                     </button>
                   </>
                 )}
-              </>
+              </span>
             )
           ) : (
             router.push("/login")

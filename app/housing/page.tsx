@@ -1,8 +1,10 @@
 "use client";
 import { auth } from "@/firebase";
+import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Markdown from "react-markdown";
+import { FaStar } from "react-icons/fa6";
 
 type HousingForm = {
   start_date: string;
@@ -16,6 +18,8 @@ type HousingForm = {
 
 const Housing = () => {
   // State variable that stores form information.
+  const [places, setPlaces] = useState<any>([]);
+  const [hotels, setHotels] = useState([]);
   const [form, setForm] = useState<HousingForm>({
     start_date: "",
     end_date: "",
@@ -116,7 +120,68 @@ const Housing = () => {
     } catch (error) {
       console.log(error);
     }
+    const fetchPlaces = async () => {
+      const options = {
+        method: 'GET',
+        url: 'https://booking-com.p.rapidapi.com/v1/hotels/locations',
+        params: {
+          name: form.city,
+          locale: 'en-us'
+        },
+        headers: {
+          'x-rapidapi-key': process.env.NEXT_PUBLIC_BOOKING_API_KEY,
+          'x-rapidapi-host': 'booking-com.p.rapidapi.com'
+        }
+      };
+      try {
+        const response = await axios.request(options);
+        console.log(response.data[0]);
+        setPlaces(response.data[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPlaces();
   };
+
+  //get hotels
+  useEffect(() => {
+    if (places && places['dest_id']) {
+      const fetchHotels = async () => {
+        const options = {
+          method: 'GET',
+          url: 'https://booking-com.p.rapidapi.com/v1/hotels/search',
+          params: {
+            checkout_date: form.end_date,
+            order_by: 'popularity',
+            filter_by_currency: 'USD',
+            include_adjacency: 'true',
+            room_number: '1',
+            dest_id: places['dest_id'],
+            dest_type: 'city',
+            adults_number: '2',
+            page_number: '0',
+            checkin_date: form.start_date,
+            locale: 'en-us',
+            units: 'metric'
+          },
+          headers: {
+            'x-rapidapi-key': process.env.NEXT_PUBLIC_BOOKING_API_KEY,
+            'x-rapidapi-host': 'booking-com.p.rapidapi.com'
+          }
+        };
+        try {
+          const response = await axios.request(options);
+          console.log("Hotels")
+          console.log(response.data);
+          setHotels(response.data['result'])
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchHotels();
+    }
+  }, [places]);
 
   // Function that updates form values.
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,17 +201,36 @@ const Housing = () => {
     }
   }, [form]);
 
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  function calculateNights(checkinDate: string, checkoutDate: string): number {
+    const checkin = new Date(checkinDate);
+    const checkout = new Date(checkoutDate);
+    if (isNaN(checkin.getTime()) || isNaN(checkout.getTime())) {
+      throw new Error('Invalid date format');
+    }
+    const differenceInMillis = checkout.getTime() - checkin.getTime();
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const nights = Math.ceil(differenceInMillis / millisecondsPerDay);
+    return nights;
+  }
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 mt-[10vh] mb-[10vh]">
       <span className="space-y-10">
-        <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10">
+        <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
           See your travel possibilities!
         </h3>
         <span
           className={
             suggestions.destination_suggestions.length != 0
-              ? `grid grid-cols-2 max-sm:grid-cols-1 gap-10`
-              : `grid grid-cols-1 max-sm:grid-cols-1 gap-10`
+              ? hotels.length == 0 ? `grid grid-cols-2 justify-items-center max-sm:grid-cols-1 gap-10` : `grid grid-cols-3 justify-items-center max-sm:grid-cols-1 gap-10`
+              : `grid grid-cols-1 justify-items-center max-sm:grid-cols-1 gap-10`
           }
         >
           <form
@@ -221,50 +305,83 @@ const Housing = () => {
             </button>
           </form>
           {suggestions.destination_suggestions.length != 0 && (
-            <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
-              <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
-                <h1 className="text-3xl font-bold">Travel Suggestions</h1>
-                <p className="font-bold">
-                  <i>
-                    * Please note that the AI used for these suggestions may
-                    display incorrect/inaccurate information. It is highly
-                    recommended to verify the suggestions and accessibility
-                    resources below through additional research.
-                  </i>
-                </p>
-                <p>
-                  These are your suggested destinations based on your trip to{" "}
-                  <b>
-                    {`${suggestions.city}`}, {`${suggestions.state}`},{" "}
-                    {`${suggestions.country}`}
-                  </b>
-                  , with a travel start date of{" "}
-                  <b>{`${suggestions.start_date}`}</b> and a travel end date of{" "}
-                  <b>{`${suggestions.end_date}`}</b>, with a budget range of{" "}
-                  <b>{`${suggestions.budget}`}</b>:
-                </p>
-                <span className="m-2 overflow-y-scroll">
-                  <span className="flex flex-col space-y-10">
-                    {suggestions.destination_suggestions.map(
-                      (suggestion, i) => (
-                        <figure
-                          className="p-10 space-y-5 bg-slate-300 rounded-lg"
-                          key={`destination-${i}`}
-                        >
-                          <h3 className="text-2xl font-bold">
-                            {suggestion.name}
-                          </h3>
-                          <p className="text-lg">
-                            <i>{suggestion.destination_description}</i>
-                          </p>
-                          <p className="text-lg">{suggestion.accessibility}</p>
-                        </figure>
-                      )
-                    )}
+            <>
+              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+                <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
+                  <h1 className="text-3xl font-bold">Travel Suggestions</h1>
+                  <p className="font-bold">
+                    <i>
+                      * Please note that the AI used for these suggestions may
+                      display incorrect/inaccurate information. It is highly
+                      recommended to verify the suggestions and accessibility
+                      resources below through additional research.
+                    </i>
+                  </p>
+                  <p>
+                    These are your suggested destinations based on your trip to{" "}
+                    <b>
+                      {`${suggestions.city}`}, {`${suggestions.state}`},{" "}
+                      {`${suggestions.country}`}
+                    </b>
+                    , with a travel start date of{" "}
+                    <b>{`${suggestions.start_date}`}</b> and a travel end date of{" "}
+                    <b>{`${suggestions.end_date}`}</b>, with a budget range of{" "}
+                    <b>{`${suggestions.budget}`}</b>:
+                  </p>
+                  <span className="m-2 overflow-y-scroll">
+                    <span className="flex flex-col space-y-10">
+                      {suggestions.destination_suggestions.map(
+                        (suggestion, i) => (
+                          <figure
+                            className="p-10 space-y-5 bg-slate-300 rounded-lg"
+                            key={`destination-${i}`}
+                          >
+                            <h3 className="text-2xl font-bold">
+                              {suggestion.name}
+                            </h3>
+                            <p className="text-lg">
+                              <i>{suggestion.destination_description}</i>
+                            </p>
+                            <p className="text-lg">{suggestion.accessibility}</p>
+                          </figure>
+                        )
+                      )}
+                    </span>
                   </span>
                 </span>
               </span>
-            </span>
+              {/* booking */}
+              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+                <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
+                  <h1 className="text-3xl font-bold">Hotel Suggestions</h1>
+                  {/* <img src={"https://hospitable.com/wp-content/uploads/2023/11/booking-grid-logo.svg"}
+                    alt={"img"}
+                    className='h-[75px]' /> */}
+                  <span className="m-2 overflow-y-scroll">
+                    <span className="flex flex-col space-y-10">
+                      {hotels.map((hotel, index) => (
+                        <div key={index} className='border-black border-2 p-3 rounded-md shadow-xl text-xl bg-white text-black mr-2 my-6 mx-auto flex flex-col'>
+                          <h4 className=' mb-2 text-center decoration-1 hover:decoration-2 underline-offset-2 font-bold text-2xl underline'><a href={hotel['url']}>{hotel['hotel_name']}</a></h4>
+                          <img
+                            src={hotel['max_photo_url']}
+                            alt={"img"}
+                            className='shadow-xl mb-2 border-black border-2 w-full h-full rounded-2xl'
+                          />
+                          <p>{hotel['address']}</p>
+                          <div className='flex flex-row items-center gap-x-2'>
+                            <label>{hotel['review_score'] == null ? "New" : hotel['review_score'] + "/10"}</label>
+                            <FaStar />
+                            <label>{hotel['review_nr']}</label>
+                          </div>
+                          <p>Min Price for {calculateNights(form.start_date, form.end_date)} Nights: <b>{formatter.format(hotel['min_total_price'])}</b></p>
+                          {/* <p className='flex flex-row items-center gap-x-2'>{hotel['accommodation_type_name']}<FaBed /></p> */}
+                        </div>
+                      ))}
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </>
           )}
         </span>
       </span>

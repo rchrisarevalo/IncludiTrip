@@ -36,6 +36,7 @@ const Signup = () => {
     disabilities_list: [],
     age: 0,
   });
+  const [accountExists, setAccountExists] = useState(false)
 
   const handleFormChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -65,7 +66,11 @@ const Signup = () => {
         form.password
       );
       const user = userCredential.user;
-      console.log("User created: ", user);
+
+      // Set accountExists state variable to false by default
+      // in case error message saying account exists is still
+      // displayed.
+      setAccountExists(false)
 
       // Create user document in Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -79,9 +84,13 @@ const Signup = () => {
         age: form.age,
         uid: user.uid,
         transcriptions: [],
+        uid: user.uid
       });
     } catch (e) {
       console.error("Error creating user: ", e);
+      
+      // Display "Account Exists" error message.
+      setAccountExists(true)
     }
   };
 
@@ -258,6 +267,11 @@ const Signup = () => {
             {form.dob != "" && form.age < 18 && (
               <label className="font-bold mt-5 text-red-500">
                 You are under 18 years old.
+              </label>
+            )}
+            {accountExists && (
+              <label className="font-bold mt-5 text-red-500">
+                The email you entered is already associated with another account.
               </label>
             )}
           </span>
