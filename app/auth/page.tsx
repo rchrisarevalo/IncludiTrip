@@ -89,6 +89,10 @@ const ChangePassword = () => {
     }
   };
 
+  const handleRefreshAfterConfirmation = () => {
+    window.location.href = "https://includitrip.com/dashboard"
+  }
+
   return (
     <>
       {!loading ? (
@@ -205,13 +209,8 @@ const ChangePassword = () => {
               Email verified! You can now go to your Dashboard.
             </h3>
             <br></br>
-            <button type="submit">
-              <Link
-                href="/dashboard"
-                className="bg-white font-bold rounded-lg p-5 w-[75%] text-black"
-              >
-                Go To Dashboard
-              </Link>
+            <button type="submit" className="bg-white font-bold rounded-lg p-5 w-[75%] text-black" onClick={handleRefreshAfterConfirmation}>
+              Go To Dashboard
             </button>
           </span>
         )
