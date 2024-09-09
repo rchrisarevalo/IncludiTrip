@@ -84,7 +84,6 @@ const Signup = () => {
         age: form.age,
         uid: user.uid,
         transcriptions: [],
-        uid: user.uid
       });
     } catch (e) {
       console.error("Error creating user: ", e);

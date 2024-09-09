@@ -3,7 +3,6 @@ import { auth } from "@/firebase";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Markdown from "react-markdown";
 import { FaStar } from "react-icons/fa6";
 
 type HousingForm = {
@@ -64,13 +63,22 @@ const Housing = () => {
           // Variable to store disabilities from array into a single list.
           let cur = "";
 
-          // Concatenate the disabilities from the array into the string.
-          disabilities_list.map((disability, i) => {
-            cur += `${disability}`;
-            if (i < data.disabilities_list.length - 1) {
-              cur += ", ";
-            }
-          });
+          // Concatenate the disabilities from the array into the string
+          // if there are any.
+          if (disabilities_list.length != 0) {
+            disabilities_list.map((disability, i) => {
+              cur += `${disability}`;
+              if (i < data.disabilities_list.length - 1) {
+                cur += ", ";
+              }
+            });
+          }
+
+          // Otherwise, initialize the cur variable to
+          // "exploring".
+          else {
+            cur = "exploring";
+          }
 
           // Update the form with the string.
           setForm({ ...form, disability: cur });
@@ -306,7 +314,7 @@ const Housing = () => {
           </form>
           {suggestions.destination_suggestions.length != 0 && (
             <>
-              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+              <span className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
                 <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
                   <h1 className="text-3xl font-bold">Travel Suggestions</h1>
                   <p className="font-bold">
@@ -351,7 +359,7 @@ const Housing = () => {
                 </span>
               </span>
               {/* booking */}
-              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+              <span className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
                 <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
                   <h1 className="text-3xl font-bold">Hotel Suggestions</h1>
                   {/* <img src={"https://hospitable.com/wp-content/uploads/2023/11/booking-grid-logo.svg"}
