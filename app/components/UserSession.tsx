@@ -114,14 +114,6 @@ const ProtectedRoute: React.FC<UserSessionProps> = ({ children }) => {
                        }
                        disabled={emailSent ? true : false}
                     >
-                      {/* {!verificationLoading ?
-                        !verificationError ?
-                          <>Verification email sent!</>
-                          :
-                          <>Verification mail failed to be sent.</>
-                        :
-                        <>Verify Email</>
-                      } */}
                       {emailSent ?
                         !verificationLoading ?
                           !verificationError ?

@@ -65,7 +65,6 @@ const Signup = () => {
         form.password
       );
       const user = userCredential.user;
-      console.log("User created: ", user);
 
       // Create user document in Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -78,6 +77,7 @@ const Signup = () => {
         disabilities_list: form.disabilities_list,
         age: form.age,
         transcriptions: [],
+        uid: user.uid
       });
     } catch (e) {
       console.error("Error creating user: ", e);
