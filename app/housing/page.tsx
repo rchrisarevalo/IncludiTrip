@@ -3,7 +3,6 @@ import { auth } from "@/firebase";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Markdown from "react-markdown";
 import { FaStar } from "react-icons/fa6";
 
 type HousingForm = {
@@ -27,7 +26,7 @@ const Housing = () => {
     state: "",
     city: "",
     country: "",
-    disability: "Blindness",
+    disability: "",
   });
   const [suggestions, setSuggestions] = useState<TravelInfo>({
     start_date: "",
@@ -38,27 +37,60 @@ const Housing = () => {
     country: "",
     destination_suggestions: [],
   });
-  const [user] = useAuthState(auth)
+  const [user] = useAuthState(auth);
 
-  console.log(user)
+  const today_date = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    // const fetchUserData = async () => {
-    //   try {
-    //     const res = await fetch('/api/retrieve_user_info', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("/api/retrieve_user_info", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: user?.uid,
+          }),
+        });
 
-    //       }
-    //     })
-    //   } catch (error) {
+        if (res.ok) {
+          const data = await res.json();
 
-    //   }
-    // }
-  }, [user])
+          // Retrieve list of disabilities.
+          const disabilities_list: string[] = data.disabilities_list;
+
+          // Variable to store disabilities from array into a single list.
+          let cur = "";
+
+          // Concatenate the disabilities from the array into the string
+          // if there are any.
+          if (disabilities_list.length != 0) {
+            disabilities_list.map((disability, i) => {
+              cur += `${disability}`;
+              if (i < data.disabilities_list.length - 1) {
+                cur += ", ";
+              }
+            });
+          }
+
+          // Otherwise, initialize the cur variable to
+          // "exploring".
+          else {
+            cur = "exploring";
+          }
+
+          // Update the form with the string.
+          setForm({ ...form, disability: cur });
+        } else {
+          throw new Error("There was an error retrieving the data.");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Function that handles the form submission.
   const handleSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,15 +98,14 @@ const Housing = () => {
 
     try {
       const user_prompt = `
-        Generate suggested destinations within the provided city based on the following information:
+        Generate 5 suggested destinations and 5 suggested hotels within 50 miles of the provided city based on the following information:
         Travel start date: ${form.start_date} (in MM/DD/YYYY format),
         Travel end date: ${form.end_date} (in MM/DD/YYYY format),
         Travel budget: ${form.budget_range},
-        Destination: ${form.city}, ${form.state}, ${form.country},
+        Destination: ${form.city}, ${form.state}, ${form.country}
 
         Provide specific accessibility services for ${form.disability} only.
       `;
-      console.log(user_prompt);
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -176,7 +207,6 @@ const Housing = () => {
     ) {
       setForm({ ...form, end_date: form.start_date });
     }
-    console.log(form);
   }, [form]);
 
   const formatter = new Intl.NumberFormat('en-US', {
@@ -220,6 +250,7 @@ const Housing = () => {
               className="border border-solid border-black p-2 rounded-md"
               type="date"
               name="start_date"
+              min={today_date}
               value={form.start_date}
               onChange={handleFormChange}
               required
@@ -283,7 +314,7 @@ const Housing = () => {
           </form>
           {suggestions.destination_suggestions.length != 0 && (
             <>
-              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+              <span className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
                 <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
                   <h1 className="text-3xl font-bold">Travel Suggestions</h1>
                   <p className="font-bold">
@@ -328,7 +359,7 @@ const Housing = () => {
                 </span>
               </span>
               {/* booking */}
-              <span className="bg-white max-sm:h-[400px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+              <span className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
                 <span className="m-2 overflow-y-scroll font-['Poppins'] space-y-5">
                   <h1 className="text-3xl font-bold">Hotel Suggestions</h1>
                   {/* <img src={"https://hospitable.com/wp-content/uploads/2023/11/booking-grid-logo.svg"}
