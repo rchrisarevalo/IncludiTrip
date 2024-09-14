@@ -3,15 +3,12 @@ import { db } from "@/firebase";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
-require("dotenv").config();
-
 const openai = new OpenAI({
-  apiKey:
-    "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",
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 
-async function transcribeAudio(file) {
+async function transcribeAudio(file: File): Promise<string> {
   const response = await openai.audio.transcriptions.create({
     language: "en",
     file: file,
@@ -21,7 +18,7 @@ async function transcribeAudio(file) {
   return response.text;
 }
 
-async function saveTranscriptionToFirebase(text) {
+async function saveTranscriptionToFirebase(text: string): Promise<void> {
   const auth = getAuth();
   const user = auth.currentUser;
 
@@ -44,7 +41,7 @@ async function saveTranscriptionToFirebase(text) {
   }
 }
 
-export async function handleAudioInput(file) {
+export async function handleAudioInput(file: File): Promise<void> {
   const text = await transcribeAudio(file);
   await saveTranscriptionToFirebase(text);
 }

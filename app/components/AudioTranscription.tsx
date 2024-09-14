@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
-import { handleAudioInput } from "../services/transcribeAudio";
+import { handleAudioInput } from "../api/transcribe_audio/route";
 import recording from "../images/recording.png";
 
 const AudioTranscription = () => {
@@ -18,6 +18,10 @@ const AudioTranscription = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!audioFile) {
+      return;
+    }
 
     try {
       const transcription = await handleAudioInput(audioFile);
