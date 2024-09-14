@@ -173,6 +173,15 @@ const Dashboard = () => {
     fetchPlaces();
   };
 
+  // Clears the relevant data to start a new when generating
+  // new travel suggestions.
+  const clearSuggestions = () => {
+    setLoadStatus({ submitted: false, loading: true, error: false });
+    setSuggestions({ ...suggestions, destination_suggestions: [] });
+    setPlaces([]);
+    setHotels([]);
+  };
+
   //get hotels
   useEffect(() => {
     if (places && places["dest_id"]) {
@@ -249,22 +258,32 @@ const Dashboard = () => {
     return nights;
   }
 
-  useEffect(() => {
-    console.log(loadStatus);
-  }, [loadStatus]);
-
   return (
     <div className="space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[15vh]">
       <span className="space-y-10 ml-0 mr-0">
-        <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
-          See your travel possibilities!
-        </h3>
+        {!loadStatus.submitted ? (
+          <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+            Enter your travel information below:
+          </h3>
+        ) : (
+          !loadStatus.loading ?
+            !loadStatus.error ?
+              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+                Travel & Hotel Suggestions
+              </h3>
+              :
+              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+                Error loading suggestions.
+              </h3>
+            :
+            <></>
+        )}
         <span
           className={
             suggestions.destination_suggestions.length != 0
               ? hotels.length == 0
-                ? `grid grid-cols-2 justify-items-center max-sm:grid-cols-1 gap-10`
-                : `grid grid-cols-2 overflow-x-auto justify-items-center max-xl:grid-cols-2 max-sm:grid-cols-1`
+                ? `grid grid-cols-1 justify-items-center max-sm:grid-cols-1 gap-10`
+                : `grid grid-cols-2 overflow-x-auto justify-items-center max-sm:grid-cols-1`
               : `grid grid-cols-1 max-sm:overflow-y-auto justify-items-center max-sm:grid-cols-1 gap-10`
           }
         >
@@ -445,10 +464,20 @@ const Dashboard = () => {
                 </>
               )
             ) : (
-              <h1 className="text-4xl font-bold">Error loading suggestions.</h1>
+              <h1 className="text-2xl font-bold">Error loading suggestions.</h1>
             )
           ) : (
-            <h1 className="text-4xl font-bold">Loading...</h1>
+            <h1 className="text-2xl font-bold">Loading...</h1>
+          )}
+        </span>
+        <span className="flex flex-row items-center justify-center">
+          {loadStatus.submitted && !loadStatus.loading && !loadStatus.error && (
+            <button
+              className="p-5 pl-10 pr-10 bg-white text-black font-bold text-lg rounded-lg"
+              onClick={clearSuggestions}
+            >
+              Enter Another Destination
+            </button>
           )}
         </span>
       </span>
