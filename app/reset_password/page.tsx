@@ -28,7 +28,7 @@ const PasswordReset = () => {
 
   return (
     <>
-      <nav className="fixed top-0 w-full text-[#23465d] bg-white py-4 px-8">
+      <nav className="w-full text-[#23465d] bg-white py-4 px-8">
         <div className="flex items-center justify-between max-w-screen-xl mx-auto">
           <Link href="/" >
           <img
@@ -41,6 +41,7 @@ const PasswordReset = () => {
           </Link>
           <ul className="flex space-x-6 font-bold text-l">
             <li><Link href="/" className="hover:text-gray-300">Home</Link></li>
+            <li><Link href="#features" className="hover:text-gray-500">Features</Link></li>
             <li><Link href="/login" className="hover:text-gray-300">Login</Link></li>
           </ul>
         </div>

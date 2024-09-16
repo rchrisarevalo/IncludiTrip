@@ -1,60 +1,488 @@
-'use client';
-import { auth } from '@/firebase';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
+"use client";
+import { auth } from "@/firebase";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { FaStar } from "react-icons/fa6";
+
+type HousingForm = {
+  start_date: string;
+  end_date: string;
+  budget_range: string;
+  state: string;
+  city: string;
+  country: string;
+  disability: string;
+};
+
+type SuggestionsLoadedStatus = {
+  submitted: boolean;
+  loading: boolean;
+  error: boolean;
+};
 
 const Dashboard = () => {
+  // State variable that stores form information.
+  const [places, setPlaces] = useState<any>([]);
+  const [hotels, setHotels] = useState([]);
+  const [form, setForm] = useState<HousingForm>({
+    start_date: "",
+    end_date: "",
+    budget_range: "$0-$500",
+    state: "",
+    city: "",
+    country: "",
+    disability: "",
+  });
+  const [suggestions, setSuggestions] = useState<TravelInfo>({
+    start_date: "",
+    end_date: "",
+    budget: "",
+    city: "",
+    state: "",
+    country: "",
+    destination_suggestions: [],
+  });
+  const [loadStatus, setLoadStatus] = useState<SuggestionsLoadedStatus>({
+    submitted: false,
+    loading: true,
+    error: false,
+  });
+  const [user] = useAuthState(auth);
 
-    const [signOut, loading, error] = useSignOut(auth)
-    const router = useRouter()
-    const [user] = useAuthState(auth)
+  const today_date = new Date().toISOString().split("T")[0];
 
-    const handleSignOut = async () => {
-        try {
-            const signed_out = await signOut()
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("/api/retrieve_user_info", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uid: user?.uid,
+          }),
+        });
 
-            if (signed_out) {
-                router.push("/login")
-            } else {
-                throw new Error("Failed to sign out!")
-            }
-        } catch (error) {
-            console.error("Failed to sign out.")
+        if (res.ok) {
+          const data = await res.json();
+
+          // Retrieve list of disabilities.
+          const disabilities_list: string[] = data.disabilities_list;
+
+          // Variable to store disabilities from array into a single list.
+          let cur = "";
+
+          // Concatenate the disabilities from the array into the string
+          // if there are any.
+          if (disabilities_list.length != 0) {
+            disabilities_list.map((disability, i) => {
+              cur += `${disability}`;
+              if (i < data.disabilities_list.length - 1) {
+                cur += ", ";
+              }
+            });
+          }
+
+          // Otherwise, initialize the cur variable to
+          // "exploring".
+          else {
+            cur = "exploring";
+          }
+
+          // Update the form with the string.
+          setForm({ ...form, disability: cur });
+        } else {
+          throw new Error("There was an error retrieving the data.");
         }
-    }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
+  }, []);
 
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#f5f5f5] p-6 gap-10">
-        <span className="ml-32 mr-32 max-sm:ml-1 max-sm:mr-1 space-y-5 text-center text-[#23465d]">
-          <h1 className="text-5xl font-bold mb-4 text-[#23465d]">Hi there!</h1>
-          <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
-            If you came across this page, this means you are on our waitlist!
-          </p>
-          <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
-            More updates will be provided as we continue to
-            develop IncludiTrip, which offers not only personalized itineraries but also accessibility
-            resources for people with disabilities.
-          </p>
-          <p className="text-xl mb-4 ml-16 mr-16 max-sm:ml-8 max-sm:mr-8">
-            Thank you for your understanding and patience. We look forward to seeing
-            you on launch day!
-          </p>
-          <button
-          onClick={handleSignOut}
-          className={`px-6 py-3 font-bold rounded-lg transition duration-300 ease-in-out ${
-            loading ? "bg-gray-300 text-gray-700 cursor-not-allowed" : "bg-[#23465d] text-white hover:bg-white hover:text-black hover:border-2 hover:border-[#23465d]"
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Signing out..." : "Log Out"}
-        </button>
-        {error && (
-          <p className="text-red-600 mt-4">{`Error: ${error.message}`}</p>
+  // Function that handles the form submission.
+  const handleSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setLoadStatus({ ...loadStatus, submitted: true });
+      const user_prompt = `
+      Generate 5 suggested destinations and 5 suggested hotels within 50 miles of the provided city based on the following information:
+      Travel start date: ${form.start_date} (in MM/DD/YYYY format),
+      Travel end date: ${form.end_date} (in MM/DD/YYYY format),
+      Travel budget: ${form.budget_range},
+      Destination: ${form.city}, ${form.state}, ${form.country}
+
+      Provide specific accessibility services for ${form.disability} only.
+    `;
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            role: "user",
+            content: user_prompt,
+          },
+        ]),
+      });
+
+      console.log(res.ok);
+
+      if (res.ok) {
+        setLoadStatus({ ...loadStatus, submitted: true, loading: false });
+        const data = await res.json();
+        setSuggestions(data.content);
+      } else {
+        setLoadStatus({
+          ...loadStatus,
+          submitted: true,
+          loading: false,
+          error: true,
+        });
+        throw new Error("Failed to generate suggestions.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    const fetchPlaces = async () => {
+      const options = {
+        method: "GET",
+        url: "https://booking-com.p.rapidapi.com/v1/hotels/locations",
+        params: {
+          name: form.city,
+          locale: "en-us",
+        },
+        headers: {
+          "x-rapidapi-key": process.env.NEXT_PUBLIC_BOOKING_API_KEY,
+          "x-rapidapi-host": "booking-com.p.rapidapi.com",
+        },
+      };
+      try {
+        const response = await axios.request(options);
+        console.log(response.data[0]);
+        setPlaces(response.data[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPlaces();
+  };
+
+  // Clears the relevant data to start a new when generating
+  // new travel suggestions.
+  const clearSuggestions = () => {
+    setLoadStatus({ submitted: false, loading: true, error: false });
+    setSuggestions({ ...suggestions, destination_suggestions: [] });
+    setPlaces([]);
+    setHotels([]);
+  };
+
+  //get hotels
+  useEffect(() => {
+    if (places && places["dest_id"]) {
+      const fetchHotels = async () => {
+        const options = {
+          method: "GET",
+          url: "https://booking-com.p.rapidapi.com/v1/hotels/search",
+          params: {
+            checkout_date: form.end_date,
+            order_by: "popularity",
+            filter_by_currency: "USD",
+            include_adjacency: "true",
+            room_number: "1",
+            dest_id: places["dest_id"],
+            dest_type: "city",
+            adults_number: "2",
+            page_number: "0",
+            checkin_date: form.start_date,
+            locale: "en-us",
+            units: "metric",
+          },
+          headers: {
+            "x-rapidapi-key": process.env.NEXT_PUBLIC_BOOKING_API_KEY,
+            "x-rapidapi-host": "booking-com.p.rapidapi.com",
+          },
+        };
+        try {
+          const response = await axios.request(options);
+          console.log("Hotels");
+          console.log(response.data);
+          setHotels(response.data["result"]);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      fetchHotels();
+    }
+  }, [places]);
+
+  // Function that updates form values.
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // useEffect hook that automatically changes the end date
+  // if the user selects a start date greater than the current
+  // end date.
+  useEffect(() => {
+    if (
+      form.start_date != "" &&
+      form.end_date != "" &&
+      form.start_date > form.end_date
+    ) {
+      setForm({ ...form, end_date: form.start_date });
+    }
+  }, [form]);
+
+  const formatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  function calculateNights(checkinDate: string, checkoutDate: string): number {
+    const checkin = new Date(checkinDate);
+    const checkout = new Date(checkoutDate);
+    if (isNaN(checkin.getTime()) || isNaN(checkout.getTime())) {
+      throw new Error("Invalid date format");
+    }
+    const differenceInMillis = checkout.getTime() - checkin.getTime();
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const nights = Math.ceil(differenceInMillis / millisecondsPerDay);
+    return nights;
+  }
+
+  return (
+    <div className="space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[15vh]">
+      <span className="space-y-10 ml-0 mr-0">
+        {!loadStatus.submitted ? (
+          <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+            Enter your travel information below:
+          </h3>
+        ) : (
+          !loadStatus.loading ?
+            !loadStatus.error ?
+              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+                Travel & Hotel Suggestions
+              </h3>
+              :
+              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
+                Error loading suggestions.
+              </h3>
+            :
+            <></>
         )}
+        <span
+          className={
+            suggestions.destination_suggestions.length != 0
+              ? hotels.length == 0
+                ? `grid grid-cols-1 justify-items-center max-sm:grid-cols-1 gap-10`
+                : `grid grid-cols-2 overflow-x-auto justify-items-center max-sm:grid-cols-1`
+              : `grid grid-cols-1 max-sm:overflow-y-auto justify-items-center max-sm:grid-cols-1 gap-10`
+          }
+        >
+          {!loadStatus.submitted ? (
+            <form
+              onSubmit={handleSubmission}
+              className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5"
+            >
+              <label className="font-bold">Start Date</label>
+              <input
+                className="border border-solid border-black p-2 rounded-md"
+                type="date"
+                name="start_date"
+                min={today_date}
+                value={form.start_date}
+                onChange={handleFormChange}
+                required
+              />
+              <label className="font-bold">End Date</label>
+              <input
+                className="border border-solid border-black p-2 rounded-md"
+                type="date"
+                name="end_date"
+                min={form.start_date}
+                value={form.end_date}
+                onChange={handleFormChange}
+                required
+              />
+              <label className="font-bold">
+                What budget range will you be working with?
+              </label>
+              <select
+                className="border border-solid border-black p-2 rounded-md"
+                name="budget_range"
+                onChange={(e) =>
+                  setForm({ ...form, budget_range: e.target.value })
+                }
+                required
+              >
+                <option value="$0-$500">$0-$500</option>
+                <option value="$500-$5000">$500-$5000</option>
+                <option value="$5000+">$5000+</option>
+              </select>
+              <span className="grid grid-cols-2 items-left">
+                <span className="flex flex-col gap-5 items-left w-[95%]">
+                  <label className="font-bold">City</label>
+                  <input
+                    className="border border-solid border-black p-2 rounded-md"
+                    name="city"
+                    onChange={handleFormChange}
+                    required
+                  />
+                </span>
+                <span className="flex flex-col gap-5 items-left">
+                  <label className="font-bold">State</label>
+                  <input
+                    className="border border-solid border-black p-2 rounded-md"
+                    name="state"
+                    onChange={handleFormChange}
+                    required
+                  />
+                </span>
+              </span>
+              <label className="font-bold">Country</label>
+              <input
+                className="border border-solid border-black p-2 rounded-md"
+                name="country"
+                onChange={handleFormChange}
+                required
+              />
+
+              <button className="p-5 mt-5 bg-black rounded-md text-white">
+                Submit
+              </button>
+            </form>
+          ) : !loadStatus.loading ? (
+            !loadStatus.error ? (
+              suggestions.destination_suggestions.length != 0 && (
+                <>
+                  <span className="bg-white ml-10 mr-10 max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[375px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+                    <span className="w-[100%] overflow-y-scroll font-['Poppins'] space-y-5">
+                      <h1 className="text-3xl font-bold">Travel Suggestions</h1>
+                      <p className="font-bold">
+                        <i>
+                          * Please note that the AI used for these suggestions
+                          may display incorrect/inaccurate information. It is
+                          highly recommended to verify the suggestions and
+                          accessibility resources below through additional
+                          research.
+                        </i>
+                      </p>
+                      <p>
+                        These are your suggested destinations based on your trip
+                        to{" "}
+                        <b>
+                          {`${suggestions.city}`}, {`${suggestions.state}`},{" "}
+                          {`${suggestions.country}`}
+                        </b>
+                        , with a travel start date of{" "}
+                        <b>{`${suggestions.start_date}`}</b> and a travel end
+                        date of <b>{`${suggestions.end_date}`}</b>, with a
+                        budget range of <b>{`${suggestions.budget}`}</b>:
+                      </p>
+                      <span className="m-2 overflow-y-scroll">
+                        <span className="flex flex-col space-y-10">
+                          {suggestions.destination_suggestions.map(
+                            (suggestion, i) => (
+                              <figure
+                                className="p-10 space-y-5 bg-slate-300 rounded-lg"
+                                key={`destination-${i}`}
+                              >
+                                <h3 className="text-2xl font-bold">
+                                  {suggestion.name}
+                                </h3>
+                                <p className="text-lg">
+                                  <i>{suggestion.destination_description}</i>
+                                </p>
+                                <p className="text-lg">
+                                  {suggestion.accessibility}
+                                </p>
+                              </figure>
+                            )
+                          )}
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                  {/* booking */}
+                  <span className="bg-white ml-10 mr-10 max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[375px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
+                    <span className="w-[100%] overflow-y-scroll font-['Poppins'] space-y-5">
+                      <h1 className="text-3xl font-bold">Hotel Suggestions</h1>
+                      {/* <img src={"https://hospitable.com/wp-content/uploads/2023/11/booking-grid-logo.svg"}
+                        alt={"img"}
+                        className='h-[75px]' /> */}
+                      <span className="m-2 overflow-y-scroll">
+                        <span className="flex flex-col space-y-10">
+                          {hotels.map((hotel, index) => (
+                            <div
+                              key={index}
+                              className="border-black border-2 p-3 rounded-md shadow-xl text-xl bg-white text-black mr-2 my-6 mx-auto flex flex-col"
+                            >
+                              <h4 className=" mb-2 text-center decoration-1 hover:decoration-2 underline-offset-2 font-bold text-2xl underline">
+                                <a href={hotel["url"]}>{hotel["hotel_name"]}</a>
+                              </h4>
+                              <img
+                                src={hotel["max_photo_url"]}
+                                alt={"img"}
+                                className="shadow-xl mb-2 border-black border-2 w-full h-full rounded-2xl"
+                              />
+                              <p>{hotel["address"]}</p>
+                              <div className="flex flex-row items-center gap-x-2">
+                                <label>
+                                  {hotel["review_score"] == null
+                                    ? "New"
+                                    : hotel["review_score"] + "/10"}
+                                </label>
+                                <FaStar />
+                                <label>{hotel["review_nr"]}</label>
+                              </div>
+                              <p>
+                                Min Price for{" "}
+                                {calculateNights(
+                                  form.start_date,
+                                  form.end_date
+                                )}{" "}
+                                Nights:{" "}
+                                <b>
+                                  {formatter.format(hotel["min_total_price"])}
+                                </b>
+                              </p>
+                              {/* <p className='flex flex-row items-center gap-x-2'>{hotel['accommodation_type_name']}<FaBed /></p> */}
+                            </div>
+                          ))}
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </>
+              )
+            ) : (
+              <h1 className="text-2xl font-bold">Error loading suggestions.</h1>
+            )
+          ) : (
+            <h1 className="text-2xl font-bold">Loading...</h1>
+          )}
         </span>
-      </div>
-    );
-}
+        <span className="flex flex-row items-center justify-center">
+          {loadStatus.submitted && !loadStatus.loading && !loadStatus.error && (
+            <button
+              className="p-5 pl-10 pr-10 bg-white text-black font-bold text-lg rounded-lg"
+              onClick={clearSuggestions}
+            >
+              Enter Another Destination
+            </button>
+          )}
+        </span>
+      </span>
+    </div>
+  );
+};
 
 export default Dashboard;
