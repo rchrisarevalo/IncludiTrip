@@ -369,7 +369,7 @@ const Dashboard = () => {
                       <p className="font-bold">
                         <i>
                           * Please note that the AI used for these suggestions
-                          may display incorrect/inaccurate information. It is
+                          may display incorrect/inaccurate information. <br></br><br></br> It is
                           highly recommended to verify the suggestions and
                           accessibility resources below through additional
                           research.
