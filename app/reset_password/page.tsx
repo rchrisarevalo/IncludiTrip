@@ -28,7 +28,7 @@ const PasswordReset = () => {
 
   return (
     <>
-      <nav className="w-full text-[#23465d] bg-white py-4 px-8">
+      <nav className="fixed top-0 w-full text-[#23465d] bg-white py-4 px-8">
         <div className="flex items-center justify-between max-w-screen-xl mx-auto">
           <Link href="/" >
           <img
