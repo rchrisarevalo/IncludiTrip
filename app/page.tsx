@@ -53,7 +53,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="features" className="w-full flex flex-col items-center justify-center text-center px-4 py-8 mt-24 scroll-smooth">
+      <section id="features" className="w-full flex flex-col items-center justify-center text-center px-4 py-8 mt-24">
         <article className="max-w-screen w-full space-y-14 text-black">
           <h1 className="text-3xl md:text-5xl font-bold">
             What does IncludiTrip do?
