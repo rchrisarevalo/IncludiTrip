@@ -15,7 +15,7 @@
     "dotenv": "^16.4.5",
     "firebase": "^10.13.1",
     "fs": "^0.0.1-security",
-    "groq-sdk": "^0.7.0",
+    "groq-sdk": "^1.1.1",
     "next": "14.2.7",
     "openai": "^4.58.1",
     "react": "^18",
