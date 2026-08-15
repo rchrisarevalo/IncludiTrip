@@ -17,7 +17,7 @@ const POST = async (req: NextRequest) => {
           ...data,
           { role: "system", content: process.env.GROQ_PROMPT },
         ],
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         response_format: { type: "json_object" },
       });
 
