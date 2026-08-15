@@ -201,7 +201,7 @@ export default function Home() {
             width={72}
           />
           <p className="mt-4 text-sm text-slate-600">
-            © 2024 IncludiTrip. All rights reserved.
+            © 2026 IncludiTrip. All rights reserved.
           </p>
         </div>
       </footer>
