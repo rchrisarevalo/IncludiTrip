@@ -246,7 +246,7 @@ const Dashboard = () => {
   const labelClasses = "font-semibold text-sm text-slate-700 tracking-wide";
 
   return (
-    <div className={`${poppins.className} space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[12vh] px-4`}>
+    <div className={`${poppins.className} space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[15vh] px-4`}>
       <div className="max-w-5xl mx-auto space-y-10">
         {/* Header */}
         <div className="text-center space-y-3">
