@@ -294,7 +294,7 @@ const Dashboard = () => {
             onSubmit={handleSubmission}
             className="bg-white max-w-xl mx-auto p-8 sm:p-10 text-black rounded-2xl shadow-2xl flex flex-col gap-5"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
               <div className="flex flex-col gap-2">
                 <label className={labelClasses}>Start Date</label>
                 <input
