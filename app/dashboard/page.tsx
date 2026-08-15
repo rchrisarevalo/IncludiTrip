@@ -3,7 +3,15 @@ import { auth } from "@/firebase";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FaStar } from "react-icons/fa6";
+import { FaStar, FaWheelchair } from "react-icons/fa6";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 type HousingForm = {
   start_date: string;
@@ -67,15 +75,9 @@ const Dashboard = () => {
 
         if (res.ok) {
           const data = await res.json();
-
-          // Retrieve list of disabilities.
           const disabilities_list: string[] = data.disabilities_list;
-
-          // Variable to store disabilities from array into a single list.
           let cur = "";
 
-          // Concatenate the disabilities from the array into the string
-          // if there are any.
           if (disabilities_list.length != 0) {
             disabilities_list.map((disability, i) => {
               cur += `${disability}`;
@@ -83,15 +85,10 @@ const Dashboard = () => {
                 cur += ", ";
               }
             });
-          }
-
-          // Otherwise, initialize the cur variable to
-          // "exploring".
-          else {
+          } else {
             cur = "exploring";
           }
 
-          // Update the form with the string.
           setForm({ ...form, disability: cur });
         } else {
           throw new Error("There was an error retrieving the data.");
@@ -103,7 +100,6 @@ const Dashboard = () => {
     fetchUserData();
   }, []);
 
-  // Function that handles the form submission.
   const handleSubmission = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -130,8 +126,6 @@ const Dashboard = () => {
           },
         ]),
       });
-
-      console.log(res.ok);
 
       if (res.ok) {
         setLoadStatus({ ...loadStatus, submitted: true, loading: false });
@@ -164,7 +158,6 @@ const Dashboard = () => {
       };
       try {
         const response = await axios.request(options);
-        console.log(response.data[0]);
         setPlaces(response.data[0]);
       } catch (error) {
         console.error(error);
@@ -173,8 +166,6 @@ const Dashboard = () => {
     fetchPlaces();
   };
 
-  // Clears the relevant data to start a new when generating
-  // new travel suggestions.
   const clearSuggestions = () => {
     setLoadStatus({ submitted: false, loading: true, error: false });
     setSuggestions({ ...suggestions, destination_suggestions: [] });
@@ -182,7 +173,6 @@ const Dashboard = () => {
     setHotels([]);
   };
 
-  //get hotels
   useEffect(() => {
     if (places && places["dest_id"]) {
       const fetchHotels = async () => {
@@ -210,8 +200,6 @@ const Dashboard = () => {
         };
         try {
           const response = await axios.request(options);
-          console.log("Hotels");
-          console.log(response.data);
           setHotels(response.data["result"]);
         } catch (error) {
           console.error(error);
@@ -221,14 +209,10 @@ const Dashboard = () => {
     }
   }, [places]);
 
-  // Function that updates form values.
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // useEffect hook that automatically changes the end date
-  // if the user selects a start date greater than the current
-  // end date.
   useEffect(() => {
     if (
       form.start_date != "" &&
@@ -254,233 +238,260 @@ const Dashboard = () => {
     }
     const differenceInMillis = checkout.getTime() - checkin.getTime();
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
-    const nights = Math.ceil(differenceInMillis / millisecondsPerDay);
-    return nights;
+    return Math.ceil(differenceInMillis / millisecondsPerDay);
   }
 
+  const inputClasses =
+    "border border-slate-300 focus:border-[#1476bc] focus:ring-2 focus:ring-[#1476bc]/20 outline-none transition-colors p-3 rounded-lg w-full";
+  const labelClasses = "font-semibold text-sm text-slate-700 tracking-wide";
+
   return (
-    <div className="space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[15vh]">
-      <span className="space-y-10 ml-0 mr-0">
-        {!loadStatus.submitted ? (
-          <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
-            Enter your travel information below:
-          </h3>
-        ) : (
-          !loadStatus.loading ?
-            !loadStatus.error ?
-              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
-                Travel & Hotel Suggestions
-              </h3>
-              :
-              <h3 className="text-3xl text-center max-sm:ml-10 max-sm:mr-10 text-white">
-                Error loading suggestions.
-              </h3>
-            :
-            <></>
-        )}
-        <span
-          className={
-            suggestions.destination_suggestions.length != 0
-              ? hotels.length == 0
-                ? `grid grid-cols-1 justify-items-center max-sm:grid-cols-1 gap-10`
-                : `grid grid-cols-2 overflow-x-auto justify-items-center max-sm:grid-cols-1`
-              : `grid grid-cols-1 max-sm:overflow-y-auto justify-items-center max-sm:grid-cols-1 gap-10`
-          }
-        >
+    <div className={`${poppins.className} space-y-10 mt-[15vh] mb-[10vh] max-sm:mt-[12vh] px-4`}>
+      <div className="max-w-5xl mx-auto space-y-10">
+        {/* Header */}
+        <div className="text-center space-y-3">
           {!loadStatus.submitted ? (
-            <form
-              onSubmit={handleSubmission}
-              className="bg-white max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[350px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5"
-            >
-              <label className="font-bold">Start Date</label>
-              <input
-                className="border border-solid border-black p-2 rounded-md"
-                type="date"
-                name="start_date"
-                min={today_date}
-                value={form.start_date}
-                onChange={handleFormChange}
-                required
-              />
-              <label className="font-bold">End Date</label>
-              <input
-                className="border border-solid border-black p-2 rounded-md"
-                type="date"
-                name="end_date"
-                min={form.start_date}
-                value={form.end_date}
-                onChange={handleFormChange}
-                required
-              />
-              <label className="font-bold">
-                What budget range will you be working with?
-              </label>
+            <>
+              <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white text-xs font-medium px-4 py-1.5 rounded-full">
+                <FaWheelchair className="text-[#7fd4ff]" />
+                Built for accessible travel planning
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
+                Where are you headed?
+              </h1>
+              <p className="text-white/70 max-w-md mx-auto text-sm">
+                Tell us your dates, budget, and destination — we'll surface
+                stays and accessibility resources that actually fit.
+              </p>
+            </>
+          ) : !loadStatus.loading ? (
+            !loadStatus.error ? (
+              <>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                  Your Travel & Hotel Suggestions
+                </h1>
+                <p className="text-white/70 text-sm">
+                  Personalized for {suggestions.city}, {suggestions.state}
+                </p>
+              </>
+            ) : (
+              <div className="max-w-md mx-auto bg-white/10 border border-red-300/40 rounded-xl p-6 space-y-2">
+                <h1 className="text-xl font-bold text-white">
+                  We couldn't load your suggestions
+                </h1>
+                <p className="text-white/70 text-sm">
+                  Something went wrong on our end. Try submitting your trip
+                  details again.
+                </p>
+              </div>
+            )
+          ) : null}
+        </div>
+
+        {/* Content */}
+        {!loadStatus.submitted ? (
+          <form
+            onSubmit={handleSubmission}
+            className="bg-white max-w-xl mx-auto p-8 sm:p-10 text-black rounded-2xl shadow-2xl flex flex-col gap-5"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>Start Date</label>
+                <input
+                  className={inputClasses}
+                  type="date"
+                  name="start_date"
+                  min={today_date}
+                  value={form.start_date}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>End Date</label>
+                <input
+                  className={inputClasses}
+                  type="date"
+                  name="end_date"
+                  min={form.start_date}
+                  value={form.end_date}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className={labelClasses}>Budget range</label>
               <select
-                className="border border-solid border-black p-2 rounded-md"
+                className={inputClasses}
                 name="budget_range"
                 onChange={(e) =>
                   setForm({ ...form, budget_range: e.target.value })
                 }
                 required
               >
-                <option value="$0-$500">$0-$500</option>
-                <option value="$500-$5000">$500-$5000</option>
-                <option value="$5000+">$5000+</option>
+                <option value="$0-$500">$0 – $500</option>
+                <option value="$500-$5000">$500 – $5,000</option>
+                <option value="$5000+">$5,000+</option>
               </select>
-              <span className="grid grid-cols-2 items-left">
-                <span className="flex flex-col gap-5 items-left w-[95%]">
-                  <label className="font-bold">City</label>
-                  <input
-                    className="border border-solid border-black p-2 rounded-md"
-                    name="city"
-                    onChange={handleFormChange}
-                    required
-                  />
-                </span>
-                <span className="flex flex-col gap-5 items-left">
-                  <label className="font-bold">State</label>
-                  <input
-                    className="border border-solid border-black p-2 rounded-md"
-                    name="state"
-                    onChange={handleFormChange}
-                    required
-                  />
-                </span>
-              </span>
-              <label className="font-bold">Country</label>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>City</label>
+                <input
+                  className={inputClasses}
+                  name="city"
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>State</label>
+                <input
+                  className={inputClasses}
+                  name="state"
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <label className={labelClasses}>Country</label>
               <input
-                className="border border-solid border-black p-2 rounded-md"
+                className={inputClasses}
                 name="country"
                 onChange={handleFormChange}
                 required
               />
+            </div>
 
-              <button className="p-5 mt-5 bg-black rounded-md text-white">
-                Submit
-              </button>
-            </form>
-          ) : !loadStatus.loading ? (
-            !loadStatus.error ? (
-              suggestions.destination_suggestions.length != 0 && (
-                <>
-                  <span className="bg-white ml-10 mr-10 max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[375px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
-                    <span className="w-[100%] overflow-y-scroll font-['Poppins'] space-y-5">
-                      <h1 className="text-3xl font-bold">Travel Suggestions</h1>
-                      <p className="font-bold">
-                        <i>
-                          * Please note that the AI used for these suggestions
-                          may display incorrect/inaccurate information. <br></br><br></br> It is
-                          highly recommended to verify the suggestions and
-                          accessibility resources below through additional
-                          research.
-                        </i>
-                      </p>
-                      <p>
-                        These are your suggested destinations based on your trip
-                        to{" "}
-                        <b>
-                          {`${suggestions.city}`}, {`${suggestions.state}`},{" "}
-                          {`${suggestions.country}`}
-                        </b>
-                        , with a travel start date of{" "}
-                        <b>{`${suggestions.start_date}`}</b> and a travel end
-                        date of <b>{`${suggestions.end_date}`}</b>, with a
-                        budget range of <b>{`${suggestions.budget}`}</b>:
-                      </p>
-                      <span className="m-2 overflow-y-scroll">
-                        <span className="flex flex-col space-y-10">
-                          {suggestions.destination_suggestions.map(
-                            (suggestion, i) => (
-                              <figure
-                                className="p-10 space-y-5 bg-slate-300 rounded-lg"
-                                key={`destination-${i}`}
-                              >
-                                <h3 className="text-2xl font-bold">
-                                  {suggestion.name}
-                                </h3>
-                                <p className="text-lg">
-                                  <i>{suggestion.destination_description}</i>
-                                </p>
-                                <p className="text-lg">
-                                  {suggestion.accessibility}
-                                </p>
-                              </figure>
-                            )
-                          )}
-                        </span>
-                      </span>
-                    </span>
+            <button className="mt-2 p-4 bg-[#1476bc] hover:bg-[#0a3f5d] transition-colors rounded-lg text-white font-semibold">
+              Find my trip
+            </button>
+          </form>
+        ) : !loadStatus.loading && !loadStatus.error ? (
+          suggestions.destination_suggestions.length != 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+              {/* Destinations */}
+              <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-h-[750px] overflow-y-auto space-y-5">
+                <h2 className="text-2xl font-bold text-slate-900">
+                  Destinations
+                </h2>
+                <div className="flex items-start gap-2 bg-amber-50 border border-amber-200 text-amber-900 text-xs rounded-lg p-3">
+                  <span>
+                    AI-generated suggestions may contain inaccuracies. Verify
+                    accessibility details independently before booking.
                   </span>
-                  {/* booking */}
-                  <span className="bg-white ml-10 mr-10 max-sm:h-[650px] h-[750px] w-[500px] max-sm:w-[375px] max-sm:overflow-y-scroll p-10 max-sm:m-5 text-black rounded-lg flex flex-col items-left text-left gap-5">
-                    <span className="w-[100%] overflow-y-scroll font-['Poppins'] space-y-5">
-                      <h1 className="text-3xl font-bold">Hotel Suggestions</h1>
-                      {/* <img src={"https://hospitable.com/wp-content/uploads/2023/11/booking-grid-logo.svg"}
-                        alt={"img"}
-                        className='h-[75px]' /> */}
-                      <span className="m-2 overflow-y-scroll">
-                        <span className="flex flex-col space-y-10">
-                          {hotels.map((hotel, index) => (
-                            <div
-                              key={index}
-                              className="border-black border-2 p-3 rounded-md shadow-xl text-xl bg-white text-black mr-2 my-6 mx-auto flex flex-col"
-                            >
-                              <h4 className=" mb-2 text-center decoration-1 hover:decoration-2 underline-offset-2 font-bold text-2xl underline">
-                                <a href={hotel["url"]}>{hotel["hotel_name"]}</a>
-                              </h4>
-                              <img
-                                src={hotel["max_photo_url"]}
-                                alt={"img"}
-                                className="shadow-xl mb-2 border-black border-2 w-full h-full rounded-2xl"
-                              />
-                              <p>{hotel["address"]}</p>
-                              <div className="flex flex-row items-center gap-x-2">
-                                <label>
-                                  {hotel["review_score"] == null
-                                    ? "New"
-                                    : hotel["review_score"] + "/10"}
-                                </label>
-                                <FaStar />
-                                <label>{hotel["review_nr"]}</label>
-                              </div>
-                              <p>
-                                Min Price for{" "}
-                                {calculateNights(
-                                  form.start_date,
-                                  form.end_date
-                                )}{" "}
-                                Nights:{" "}
-                                <b>
-                                  {formatter.format(hotel["min_total_price"])}
-                                </b>
-                              </p>
-                              {/* <p className='flex flex-row items-center gap-x-2'>{hotel['accommodation_type_name']}<FaBed /></p> */}
-                            </div>
-                          ))}
-                        </span>
-                      </span>
-                    </span>
-                  </span>
-                </>
-              )
-            ) : (
-              <h1 className="text-2xl font-bold">Error loading suggestions.</h1>
-            )
-          ) : (
-            <h1 className="text-2xl font-bold">Loading...</h1>
-          )}
-        </span>
-        <span className="flex flex-row items-center justify-center">
-          {loadStatus.submitted && !loadStatus.loading && !loadStatus.error && (
+                </div>
+                <p className="text-sm text-slate-600">
+                  Based on a trip to{" "}
+                  <span className="font-semibold text-slate-900">
+                    {suggestions.city}, {suggestions.state},{" "}
+                    {suggestions.country}
+                  </span>{" "}
+                  from{" "}
+                  <span className="font-semibold text-slate-900">
+                    {suggestions.start_date}
+                  </span>{" "}
+                  to{" "}
+                  <span className="font-semibold text-slate-900">
+                    {suggestions.end_date}
+                  </span>{" "}
+                  ({suggestions.budget})
+                </p>
+
+                <div className="space-y-4">
+                  {suggestions.destination_suggestions.map((suggestion, i) => (
+                    <figure
+                      key={`destination-${i}`}
+                      className="p-5 rounded-xl border border-slate-200 hover:border-[#1476bc]/40 hover:shadow-md transition-all space-y-2"
+                    >
+                      <h3 className="text-lg font-bold text-slate-900">
+                        {suggestion.name}
+                      </h3>
+                      <p className="text-sm text-slate-600 italic">
+                        {suggestion.destination_description}
+                      </p>
+                      <div className="flex items-start gap-2 text-sm text-slate-800 bg-[#1476bc]/5 rounded-lg p-3">
+                        <FaWheelchair className="text-[#1476bc] mt-0.5 flex-shrink-0" />
+                        <span>{suggestion.accessibility}</span>
+                      </div>
+                    </figure>
+                  ))}
+                </div>
+              </div>
+
+              {/* Hotels */}
+              <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-h-[750px] overflow-y-auto space-y-5">
+                <h2 className="text-2xl font-bold text-slate-900">Stays</h2>
+                <div className="space-y-4">
+                  {hotels.map((hotel, index) => (
+                    <div
+                      key={index}
+                      className="rounded-xl border border-slate-200 hover:shadow-md transition-shadow overflow-hidden"
+                    >
+                      <img
+                        src={hotel["max_photo_url"]}
+                        alt={hotel["hotel_name"]}
+                        className="w-full h-40 object-cover"
+                      />
+                      <div className="p-4 space-y-1">
+                        <a
+                          href={hotel["url"]}
+                          className="font-bold text-slate-900 hover:text-[#1476bc] transition-colors"
+                        >
+                          {hotel["hotel_name"]}
+                        </a>
+                        <p className="text-sm text-slate-500">
+                          {hotel["address"]}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm">
+                          <span className="font-medium text-slate-800">
+                            {hotel["review_score"] == null
+                              ? "New"
+                              : `${hotel["review_score"]}/10`}
+                          </span>
+                          <FaStar className="text-amber-400" />
+                          <span className="text-slate-500">
+                            {hotel["review_nr"]} reviews
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-700 pt-1">
+                          {calculateNights(form.start_date, form.end_date)}{" "}
+                          nights from{" "}
+                          <span className="font-bold text-slate-900">
+                            {formatter.format(hotel["min_total_price"])}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )
+        ) : loadStatus.loading ? (
+          <div className="flex justify-center">
+            <div className="bg-white/10 text-white text-sm rounded-full px-5 py-2.5">
+              Finding suggestions for you…
+            </div>
+          </div>
+        ) : null}
+
+        {loadStatus.submitted && !loadStatus.loading && !loadStatus.error && (
+          <div className="flex justify-center">
             <button
-              className="p-5 pl-10 pr-10 bg-white text-black font-bold text-lg rounded-lg"
+              className="px-8 py-3.5 bg-white text-[#1476bc] font-semibold rounded-full shadow-lg hover:shadow-xl transition-shadow"
               onClick={clearSuggestions}
             >
-              Enter Another Destination
+              Plan another trip
             </button>
-          )}
-        </span>
-      </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
