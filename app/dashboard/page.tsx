@@ -260,7 +260,7 @@ const Dashboard = () => {
                 Where are you headed?
               </h1>
               <p className="text-white/70 max-w-md mx-auto text-sm">
-                Tell us your dates, budget, and destination — we'll surface
+                Tell us your dates, budget, and destination — we will surface
                 stays and accessibility resources that actually fit.
               </p>
             </>
@@ -277,7 +277,7 @@ const Dashboard = () => {
             ) : (
               <div className="max-w-md mx-auto bg-white/10 border border-red-300/40 rounded-xl p-6 space-y-2">
                 <h1 className="text-xl font-bold text-white">
-                  We couldn't load your suggestions
+                  We could not load your suggestions
                 </h1>
                 <p className="text-white/70 text-sm">
                   Something went wrong on our end. Try submitting your trip
