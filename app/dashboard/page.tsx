@@ -242,7 +242,7 @@ const Dashboard = () => {
   }
 
   const inputClasses =
-    "border border-slate-300 focus:border-[#1476bc] focus:ring-2 focus:ring-[#1476bc]/20 outline-none transition-colors p-3 rounded-lg w-full";
+    "border border-slate-300 focus:border-[#1476bc] focus:ring-2 focus:ring-[#1476bc]/20 outline-none transition-colors p-3 rounded-lg";
   const labelClasses = "font-semibold text-sm text-slate-700 tracking-wide";
 
   return (
