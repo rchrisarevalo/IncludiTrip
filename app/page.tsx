@@ -191,17 +191,54 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="w-full bg-white text-black py-8 px-4 sm:px-8">
-        <div className="max-w-screen-xl mx-auto flex flex-col items-center">
+      <footer className="w-full bg-white px-4 py-8 text-black sm:px-8">
+        <div className="mx-auto flex max-w-screen-xl flex-col items-center text-center">
           <img
             src={logo.src}
             alt="IncludiTrip logo"
-            className="object-cover rounded-lg"
+            className="rounded-lg object-cover"
             height={72}
             width={72}
           />
+
           <p className="mt-4 text-sm text-slate-600">
-            © 2026 IncludiTrip. All rights reserved.
+            Managed and maintained by{" "}
+            <a
+              href="https://rubenarevalo.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-slate-800 underline decoration-slate-400 underline-offset-4 transition-colors hover:text-blue-700"
+            >
+              Ruben Arevalo AI &amp; Software Studio
+            </a>
+            .
+          </p>
+
+          <p className="mt-2 text-sm text-slate-600">
+            Originally created in 2024 by Ruben Arevalo,{" "}
+            <a
+              href="https://mauro-castillo.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-slate-800 underline decoration-slate-400 underline-offset-4 transition-colors hover:text-blue-700"
+            >
+              Mauro Castillo
+            </a>
+            ,{" "} 
+            <a
+              href="https://maviyay.github.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-slate-800 underline decoration-slate-400 underline-offset-4 transition-colors hover:text-blue-700"
+            >
+              Maviya Yaseen
+            </a>
+            ,{" "}
+            and Henry Tran.
+          </p>
+
+          <p className="mt-2 text-sm text-slate-600">
+            © 2024–2026 IncludiTrip. All rights reserved.
           </p>
         </div>
       </footer>
